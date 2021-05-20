@@ -13,3 +13,4 @@ if (file_exists($autoloadPath1)) {
 use function Project\Package\Gendiff\genDiff;
 
 genDiff();
+

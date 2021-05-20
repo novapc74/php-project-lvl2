@@ -10,7 +10,8 @@
         }
     ],
     "require": {
-        "wp-cli/wp-cli": "^2.4"
+        "wp-cli/wp-cli": "^2.4",
+        "docopt/docopt": "^1.0"
     },
 
     "require-dev": {
@@ -18,7 +19,7 @@
         "squizlabs/php_codesniffer": "^3.6"
     },
     "bin": [
-        "bin/gendiff"
+        "bin/genDiff"
    ],
     "autoload": {
         "psr-4": {
@@ -26,8 +27,7 @@
         "Php\\Package\\Tests\\": "tests"
         },
      "files":[
-        "src/Gendiff.php",
-        "src/docopt.php"
+        "src/GenDiff.php"
          ]
     },
     "scripts": {
