@@ -4,19 +4,19 @@ namespace Project\Package\Gendiff;
 
 use Docopt;
 
-function convertJsonToArray($jsonFormat)
+function convertFileContent(array $contentFile): array
 {
-    $objectFormat = json_decode(implode('', $jsonFormat));
-    $arrayFormat = [];
-    foreach ($objectFormat as $key => $value) {
-        if (gettype($objectFormat->$key) == 'boolean') {
-            $value === false ? $arrayFormat[$key] = 'false' : $arrayFormat[$key] = 'true';
+    $decodedFormat = json_decode(implode('', $contentFile), true);
+    $formatedType = [];
+    foreach ($decodedFormat as $key => $value) {
+        if (gettype($decodedFormat[$key]) === 'boolean') {
+            $decodedFormat[$key] ? $formatedType[$key] = 'true' : $formatedType[$key] = 'false';
         } else {
-            $arrayFormat[$key] = $objectFormat->$key;
+            $formatedType[$key] = $decodedFormat[$key];
         }
     }
-    ksort($arrayFormat);
-    return $arrayFormat;
+    ksort($formatedType, SORT_STRING);
+    return $formatedType;
 }
 
 function getOutFotmat(array $firstFile, array $secondFile): string
@@ -63,7 +63,7 @@ function genDiff(): void
 
     $args = Docopt::handle($doc, array('version' => 'Generate diff 2.0'));
 
-    $firstFile = convertJsonToArray(file($args->args['<firstFile>']));
-    $secondFile = convertJsonToArray(file($args->args['<secondFile>']));
-    print_r(getOutFotmat($firstFile, $secondFile));
+    $contentFirstFile = convertFileContent(file($args->args['<firstFile>']));
+    $contentSecondFile = convertFileContent(file($args->args['<secondFile>']));
+    print_r(getOutFotmat($contentFirstFile, $contentSecondFile));
 }

@@ -9,3 +9,6 @@ lint:
 	
 lint-fix:
 	composer run-script phpcbf -- --standard=PSR12 src bin
+	
+test:
+	composer exec --verbose phpunit tests
