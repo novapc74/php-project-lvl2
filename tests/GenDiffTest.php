@@ -72,5 +72,7 @@ class GenDiffTest extends TestCase
 }
 ';
         $this->assertEquals($expected, getOutFotmat($this->firstConverted, $this->secondConverted));
+        $this->assertTrue(!is_array(getOutFotmat($this->firstConverted, $this->secondConverted)));
+        $this->assertFalse(empty(getOutFotmat($this->firstConverted, $this->secondConverted)));
     }
 }
