@@ -3,7 +3,7 @@
 namespace Project\Phpunit\Tests;
 
 use PHPUnit\Framework\TestCase;
-use function Project\Package\Gendiff\convertFileContent;
+use function Project\Package\Gendiff\convertFileArrayContent;
 use function Project\Package\Gendiff\getOutFotmat;
 
 class GenDiffTest extends TestCase
@@ -26,6 +26,20 @@ class GenDiffTest extends TestCase
             'timeout' => '20',
             'verbose' => 'true',
             ];
+        // $pathToJson1 = getFixtureFullPath('file1.json');
+        // $pathToJson2 = getFixtureFullPath('file2.json');
+    }
+
+    // определение путей до фикстур
+    // public function getFixtureFullPath($fixtureName)
+    // {
+    //     $parts = [__DIR__, 'fixtures', $fixtureName];
+    //     return realpath(implode('/', $parts));
+    // }
+
+    public function comparisonFixtures($pathToJson1, $pathToJson2): void
+    {
+// пока пустая функция
     }
 
     public function testConvert(): void
@@ -41,10 +55,10 @@ class GenDiffTest extends TestCase
             'timeout' => '20',
             'verbose' => 'true',
             ];
-        $this->assertTrue(is_array(convertFileContent($this->fileJsonFirst)));
-        $this->assertFalse(empty(convertFileContent($this->fileJsonFirst)));
-        $this->assertEquals($expected1, convertFileContent($this->fileJsonFirst));
-        $this->assertEquals($expected2, convertFileContent($this->fileJsonSecond));
+        $this->assertTrue(is_array(convertFileArrayContent($this->fileJsonFirst)));
+        $this->assertFalse(empty(convertFileArrayContent($this->fileJsonFirst)));
+        $this->assertEquals($expected1, convertFileArrayContent($this->fileJsonFirst));
+        $this->assertEquals($expected2, convertFileArrayContent($this->fileJsonSecond));
     }
     public function testGetFormat(): void
     {

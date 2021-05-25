@@ -4,7 +4,7 @@ namespace Project\Package\Gendiff;
 
 use Docopt;
 
-function convertFileContent(array $contentFile): array
+function convertFileArrayContent(array $contentFile): array
 {
     $decodedFormat = json_decode(implode('', $contentFile), true);
     $formatedType = [];
@@ -63,7 +63,8 @@ function genDiff(): void
 
     $args = Docopt::handle($doc, array('version' => 'Generate diff 2.0'));
 
-    $contentFirstFile = convertFileContent(file($args->args['<firstFile>']));
-    $contentSecondFile = convertFileContent(file($args->args['<secondFile>']));
+    $contentFirstFile = convertFileArrayContent(file($args->args['<firstFile>']));
+    $contentSecondFile = convertFileArrayContent(file($args->args['<secondFile>']));
+
     print_r(getOutFotmat($contentFirstFile, $contentSecondFile));
 }
