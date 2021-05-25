@@ -10,12 +10,13 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
+    
     steps:
     - uses: actions/checkout@v2
     - name: Setup PHP
       uses: shivammathur/setup-php@v2
       with:
-      php-version: '7.4.3'   
+        php-version: '7.4'
     - name: Composer update
       run: composer update
     - name: Cache Composer packages
