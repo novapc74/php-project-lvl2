@@ -1,1 +1,1 @@
-C:37:"PHPUnit\Runner\DefaultTestResultCache":224:{a:2:{s:7:"defects";a:1:{s:46:"Project\Phpunit\Tests\GenDiffTest::testConvert";i:4;}s:5:"times";a:2:{s:46:"Project\Phpunit\Tests\GenDiffTest::testConvert";d:0.004;s:48:"Project\Phpunit\Tests\GenDiffTest::testGetFormat";d:0;}}}
+C:37:"PHPUnit\Runner\DefaultTestResultCache":224:{a:2:{s:7:"defects";a:1:{s:46:"Project\Phpunit\Tests\GenDiffTest::testConvert";i:4;}s:5:"times";a:2:{s:46:"Project\Phpunit\Tests\GenDiffTest::testConvert";d:0.005;s:48:"Project\Phpunit\Tests\GenDiffTest::testGetFormat";d:0;}}}

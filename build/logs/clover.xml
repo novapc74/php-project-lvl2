@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1621933369">
-  <project timestamp="1621933369">
+<coverage generated="1621936502">
+  <project timestamp="1621936502">
     <file name="/home/novapc74/php-project-lvl2/src/GenDiff.php">
       <line num="9" type="stmt" count="1"/>
       <line num="10" type="stmt" count="1"/>
