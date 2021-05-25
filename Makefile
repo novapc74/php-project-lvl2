@@ -8,10 +8,10 @@ lint:
 	composer run-script phpcs -- --standard=PSR12 src bin
 	
 lint-fix:
-	composer run-script phpcbf -- --standard=PSR12 src bin
-
+	composer run-script phpcbf -- --standard=PSR12 src bin	
+	
 test:
-	composer phpunit tests -- --coverage-clover
+	composer exec --verbose phpunit tests
 
 test-coverage:
-	composer phpunit tests -- --coverage-clover build/logs/clover.xml
+	composer exec --verbose phpunit tests -- --coverage-clover build/logs/clover.xml
