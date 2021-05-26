@@ -16,29 +16,25 @@ class GenDiffTest extends TestCase
     private $beginFileYaml;
     private $endFileYaml;
 
-
     public function setUp(): void
     {
         $this->beginFileJson = file_get_contents('tests/fixtures/JSON1.json');
         $this->endFileJson = file_get_contents('tests/fixtures/JSON2.json');
         $this->beginFileYaml = file_get_contents('tests/fixtures/YAML1.yml');
         $this->endFileYaml = file_get_contents('tests/fixtures/YAML2.yml');
-
     }
+    // public function getFixtureFullPath($fixtureName)
+    // {
+    //     $parts = [__DIR__, 'tests/fixtures/', $fixtureName];
+    //     return realpath(implode('/', $parts));
+    // }
 
-    public function getFixtureFullPath($fixtureName)
-    {
-        $parts = [__DIR__, 'tests/fixtures/', $fixtureName];
-        return realpath(implode('/', $parts));
-    }
-
-    public function comparisonFixtures($pathToJson1, $pathToJson2): void
-    {
-        // пока пустая функция
-        // $pathToJson1 = getFixtureFullPath('file1.json');
-        // $pathToJson2 = getFixtureFullPath('file2.json');
-    }
-
+    // public function comparisonFixtures($pathToJson1, $pathToJson2): void
+    // {
+    //     // пока пустая функция
+    //     // $pathToJson1 = getFixtureFullPath('file1.json');
+    //     // $pathToJson2 = getFixtureFullPath('file2.json');
+    // }
     public function testIsFilesYaml()
     {
         $this->assertEquals(true, isFilesYaml('file.yaml'));
@@ -75,37 +71,40 @@ class GenDiffTest extends TestCase
         ];
         $this->assertEquals($expected, convertBooleanToString($nested));
     }
-    // определение путей до фикстур
 
-
-//     public function testConvert(): void
-//     {
-//         $expected1 = [
-//             'follow' => 'false',
-//             'host' => 'hexlet.io',
-//             'proxy' => '123.234.53.22',
-//             'timeout' => '50',
-//             ];
-//         $expected2 = [
-//             'host' => 'hexlet.io',
-//             'timeout' => '20',
-//             'verbose' => 'true',
-//             ];
-//         $this->assertTrue(is_array(convertFileArrayContent($this->fileJsonFirst)));
-//         $this->assertFalse(empty(convertFileArrayContent($this->fileJsonFirst)));
-//         $this->assertEquals($expected1, convertFileArrayContent($this->fileJsonFirst));
-//         $this->assertEquals($expected2, convertFileArrayContent($this->fileJsonSecond));
-//     }
-//     public function testGetFormat(): void
-//     {
-//         $expected ='{
-// -follow: false
-//  host: hexlet.io
-// -proxy: 123.234.53.22
-// -timeout: 50
-// +timeout: 20
-// +verbose: true
-// }
-// ';
-//     }
+    public function testGetOutputFotmat()
+    {
+        $nested1 = [
+            'follow' => 'false',
+            'host' => 'hexlet.io',
+            'proxy' => '123.234.53.22',
+            'timeout' => '50',
+            ];
+        $nested2 = [
+            'host' => 'hexlet.io',
+            'timeout' => '20',
+            'verbose' => 'true',
+            ];
+        $expected ='{
+-follow: false
+ host: hexlet.io
+-proxy: 123.234.53.22
+-timeout: 50
++timeout: 20
++verbose: true
+}
+';
+        $this->assertEquals('string', gettype(GetOutputFotmat($nested1, $nested2)));
+        $this->assertEquals($expected, GetOutputFotmat($nested1, $nested2));
+    }
+    public function testParserFileYaml()
+    {
+        $expected = [
+            'follow' => false,
+            'host' => 'hexlet.io',
+            'proxy' => '123.234.53.22',
+            'timeout' => '50',
+            ];
+        $this->assertEquals($expected, parserFileYaml($this->beginFileYaml));
+    }
 }
