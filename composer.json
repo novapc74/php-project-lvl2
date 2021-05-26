@@ -11,7 +11,8 @@
     ],
     "require": {
         "wp-cli/wp-cli": "^2.4",
-        "docopt/docopt": "^1.0"
+        "docopt/docopt": "^1.0",
+        "symfony/yaml": "^5.2"
     },
 
     "require-dev": {
@@ -27,7 +28,8 @@
         "Php\\Package\\Tests\\": "tests"
         },
      "files":[
-        "src/GenDiff.php"
+        "src/GenDiff.php",
+        "src/Parser.php"
          ]
     },
     "scripts": {

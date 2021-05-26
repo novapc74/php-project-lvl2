@@ -1,25 +1,37 @@
 <?php
 
-namespace Project\Package\Gendiff;
+namespace Project\Package\GenDiff;
 
+use Symfony\Component\Yaml\Yaml;
+use function Project\Package\Parser\parserFileYaml;
 use Docopt;
 
-function convertFileArrayContent(array $contentFile): array
+function isFilesYaml(string $nameFile): string
 {
-    $decodedFormat = json_decode(implode('', $contentFile), true);
+    $fileType = explode('.', $nameFile)[1];
+    return $fileType == 'yaml' || $fileType == 'yml' ? true : false;
+}
+
+function decodeJsonFormat(string $contentFile): array
+{
+    return json_decode($contentFile, true);
+}
+
+function convertBooleanToString($arrayContentFile)
+{
     $formatedType = [];
-    foreach ($decodedFormat as $key => $value) {
-        if (gettype($decodedFormat[$key]) === 'boolean') {
-            $decodedFormat[$key] ? $formatedType[$key] = 'true' : $formatedType[$key] = 'false';
+    foreach ($arrayContentFile as $key => $value) {
+        if (gettype($arrayContentFile[$key]) === 'boolean') {
+            $arrayContentFile[$key] ? $formatedType[$key] = 'true' : $formatedType[$key] = 'false';
         } else {
-            $formatedType[$key] = $decodedFormat[$key];
+            $formatedType[$key] = $arrayContentFile[$key];
         }
     }
     ksort($formatedType, SORT_STRING);
     return $formatedType;
 }
 
-function getOutFotmat(array $firstFile, array $secondFile): string
+function getOutputFotmat(array $firstFile, array $secondFile): string
 {
     $listKey = array_values(array_unique(array_merge(array_keys($firstFile), array_keys($secondFile))));
     $mainOutSts = array_reduce($listKey, function ($acc, $item) use ($firstFile, $secondFile) {
@@ -63,8 +75,15 @@ function genDiff(): void
 
     $args = Docopt::handle($doc, array('version' => 'Generate diff 2.0'));
 
-    $contentFirstFile = convertFileArrayContent(file($args->args['<firstFile>']));
-    $contentSecondFile = convertFileArrayContent(file($args->args['<secondFile>']));
+    $typFile1 = isFilesYaml($args['<firstFile>']);
+    $typFile2 = isFilesYaml($args['<secondFile>']);
 
-    print_r(getOutFotmat($contentFirstFile, $contentSecondFile));
+    if (isFilesYaml($args['<firstFile>']) && isFilesYaml($args['<secondFile>'])) {
+        $contentFirstFile = convertBooleanToString(parserFileYaml(file_get_contents($args['<firstFile>'])));
+        $contentSecondFile = convertBooleanToString(parserFileYaml(file_get_contents($args['<secondFile>'])));
+    } else {
+        $contentFirstFile = convertBooleanToString(decodeJsonFormat(file_get_contents($args['<firstFile>'])));
+        $contentSecondFile = convertBooleanToString(decodeJsonFormat(file_get_contents($args['<secondFile>'])));
+    }
+    echo getOutputFotmat($contentFirstFile, $contentSecondFile);
 }
