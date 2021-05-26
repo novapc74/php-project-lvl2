@@ -3,8 +3,9 @@
 namespace Project\Package\GenDiff;
 
 use Symfony\Component\Yaml\Yaml;
-use function Project\Package\Parser\parserFileYaml;
 use Docopt;
+
+use function Project\Package\Parser\parserFileYaml;
 
 function isFilesYaml(string $nameFile): string
 {
