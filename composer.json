@@ -29,7 +29,8 @@
         },
      "files":[
         "src/GenDiff.php",
-        "src/Parsers.php"
+        "src/Parsers.php",
+        "src/Viewer.php"
          ]
     },
     "scripts": {
