@@ -6,14 +6,15 @@ use Symfony\Component\Yaml\Yaml;
 use Docopt;
 
 use function Project\Package\Parsers\parserFile;
-use function Project\Package\Viewer\getViewFlat;
+use function Project\Package\Ast\compareIter;
+use function Project\Package\Stylish\displayResult;
 
-function genDiff(string $path1, string $path2, string $formatName = 'stylish'): string
+function genDiff(string $path1, string $path2, string $formatName = 'stylish'): array
 {
-    return getViewFlat(parserFile($path1), parserFile($path2));
+    return compareIter(parserFile($path1), parserFile($path2));
 }
 
-function run(): string
+function run(): void
 {
     $doc = <<<DOC
     Generate diff
@@ -35,8 +36,5 @@ function run(): string
 
     $path1 = $args['<firstFile>'];
     $path2 = $args['<secondFile>'];
-    // $stylish = $args['<fmt>'];
-
-    echo genDiff($path1, $path2);
-    return genDiff($path1, $path2);
+    print(displayResult(genDiff($path1, $path2)));
 }

@@ -3,89 +3,139 @@
 namespace Project\Phpunit\Tests;
 
 use PHPUnit\Framework\TestCase;
-use function Project\Package\Parsers\isFilesYaml;
+use Symfony\Component\Yaml\Yaml;
+use stdClass;
+
 use function Project\Package\Parsers\parserFile;
-use function Project\Package\Viewer\getViewFlat;
-use function Project\Package\Viewer\toString;
-use function Project\Package\Viewer\stringify;
+use function Project\Package\Parsers\isFileYaml;
+
+use function Project\Package\Ast\makeStructure;
+use function Project\Package\Ast\compareIter;
+
+use function Project\Package\Stylish\toString;
+use function Project\Package\Stylish\stringifyValue;
+use function Project\Package\Stylish\convertObject;
+use function Project\Package\Stylish\stringify;
+use function Project\Package\Stylish\displayResult;
+
 use function Project\Package\GenDiff\genDiff;
-use function Project\Package\GenDiff\run;
 
 class GenDiffTest extends TestCase
 {
-    private $beginFileJson;
-    private $endFileJson;
-    private $beginFileYaml;
-    private $endFileYaml;
-    private $flatResult;
-
     public function setUp(): void
     {
-        $this->beginFileJson = file_get_contents('tests/fixtures/JSON1.json');
-        $this->endFileJson = file_get_contents('tests/fixtures/JSON2.json');
-        $this->beginFileYaml = file_get_contents('tests/fixtures/YAML1.yml');
-        $this->endFileYaml = file_get_contents('tests/fixtures/YAML2.yml');
-        $this->flatResult = file_get_contents('tests/fixtures/flatResult.txt');
+        $this->pathToBeginFlatJson = 'tests/fixtures/flatFixtures/beginFileJson.json';
+        $this->pathToEndFlatJson = 'tests/fixtures/flatFixtures/endFileJson.json';
+        $this->pathToBeginFlatYaml = 'tests/fixtures/flatFixtures/beginYFileaml.yaml';
+        $this->pathToEndFlatYaml = 'tests/fixtures/flatFixtures/endFileYaml.yaml';
+        $this->pathToBeginTreeJson = 'tests/fixtures/treeFixtures/beginFile.json';
+        $this->pathToEndTreeJson = 'tests/fixtures/treeFixtures/endFile.json';
+        $this->pathToBeginTreeYaml = 'tests/fixtures/treeFixtures/beginFile.yaml';
+        $this->pathToEndTreeYaml = 'tests/fixtures/treeFixtures/endFile.yaml';
+
+        $this->testArray = [
+            'key' => 'key',
+            'type' => 'replace',
+            'oldValue' => 'oldValue',
+            'newValue' => 'newValue',
+            'children' => [],
+            ];
+        $this->testArray2 = [
+            'key' => 'common',
+            'type' => 'replace',
+            'oldValue' => 'oldValue',
+            'newValue' => 'newValue',
+            'children' => [],
+            ];
+        $this->beginObject = json_decode(file_get_contents($this->pathToBeginTreeJson));
+        $this->endObject = json_decode(file_get_contents($this->pathToEndTreeJson));
     }
 
-    public function testIsFilesYaml()
+    public function testParserFile()
     {
-        $this->assertEquals(true, isFilesYaml('file.yaml'));
-        $this->assertEquals(true, isFilesYaml('file.yml'));
-        $this->assertEquals(false, isFilesYaml('file.json'));
+        $this->assertTrue(is_object(parserFile($this->pathToBeginFlatJson)));
+        $this->assertTrue(is_object(parserFile($this->pathToEndFlatYaml)));
     }
-////////////////// REMOVED Function....
-    // public function testDecodeJsonFormat()
-    // {
-    //     $expected = [
-    //         'host' => 'hexlet.io',
-    //         'timeout' => 50,
-    //         'proxy' => '123.234.53.22',
-    //         'follow' => false,
-    //     ];
-    //     $this->assertTrue(is_array(DecodeJsonFormat($this->beginFileJson)));
-    //     $this->assertEquals($expected, (DecodeJsonFormat($this->beginFileJson)));
-    //     $this->assertEquals([], DecodeJsonFormat('{}'));
-    // }
+
+    public function testIsFileYaml()
+    {
+        $fileNameYaml = 'test.yaml';
+        $fileNameYml = 'test.yml';
+        $fileNameJson = 'test.json';
+        $this->assertEquals(1, isFileYaml($fileNameYaml));
+        $this->assertEquals(1, isFileYaml($fileNameYml));
+        $this->assertEquals(0, isFileYaml($fileNameJson));
+    }
 
     public function testToString()
     {
         $nested = true;
         $expected = 'true';
         $this->assertEquals($expected, toString($nested));
+        $nested = false;
+        $expected = 'false';
+        $this->assertEquals($expected, toString($nested));
+        $nested = null;
+        $expected = 'null';
+        $this->assertEquals($expected, toString($nested));
+        $nested = 50.45;
+        $expected = '50.45';
+        $this->assertEquals($expected, toString($nested));
     }
 
-    public function getViewFlat()
+    public function testStringifyValue()
     {
-        $nested1 = [
-            'follow' => 'false',
-            'host' => 'hexlet.io',
-            'proxy' => '123.234.53.22',
-            'timeout' => '50',
-            ];
-        $nested2 = [
-            'host' => 'hexlet.io',
-            'timeout' => '20',
-            'verbose' => 'true',
-            ];
-
-        $this->assertEquals('string', gettype(GetOutputFotmat($nested1, $nested2)));
-        $this->assertEquals($this->flatResult, GetOutputFotmat($nested1, $nested2));
+        $expected = '- key: oldValue' . PHP_EOL;
+        $expected .= '+ key: newValue';
+        $this->assertEquals($expected, stringifyValue($this->testArray, ''));
     }
-    public function testParserFile()
+    public function testConvertObject()
     {
-        $expected = [
-            'host' => 'hexlet.io',
-            'timeout' => '50',
-            'proxy' => '123.234.53.22',
-            'follow' => false,
-            ];
-        $test = parserFile($this->beginFileYaml);
-        $this->assertEquals($expected, parserFile('tests/fixtures/YAML1.yml'));
+        $object = json_decode(file_get_contents($this->pathToBeginFlatJson));
+        $object1 = Yaml::parse(file_get_contents($this->pathToBeginTreeYaml), Yaml::PARSE_OBJECT_FOR_MAP);
+        $this->assertTrue(is_array(convertObject($object)));
+        $this->assertTrue(is_array(convertObject($object1)));
+    }
+    public function testStryngify()
+    {
+        $this->assertTrue(is_string(stringify($this->testArray)));
+    }
+
+    public function testDisplayResult()
+    {
+        $expected = '{
+  - key: oldValue
+  + key: newValue
+}';
+        $this->assertEquals($expected, displayResult([$this->testArray]));
+    }
+
+    public function testMakeStructure()
+    {
+        $values = ['key', 'replace', 'oldValue', 'newValue' , []];
+        $this->assertEquals($this->testArray, makeStructure($values));
+    }
+
+    public function testCompareIter()
+    {
+        $beginObject = new stdClass();
+        $beginObject->common = 'oldValue';
+
+        $endObject = new stdClass();
+        $endObject->common = 'newValue';
+
+        $arrTest = [$this->testArray2];
+
+        $this->assertEquals($arrTest, compareIter($beginObject, $endObject));
     }
 
     public function testGenDiff()
     {
-        $this->assertStringEqualsFile('tests/fixtures/flatResult.txt', genDiff('work/beginFile.json', 'work/endFile.json'));
+        $beginPath = 'tests/fixtures/simpleFixtures/first.json';
+        $endPath = 'tests/fixtures/simpleFixtures/second.json';
+
+        $arrTest = [$this->testArray2];
+
+        $this->assertEquals($arrTest, genDiff($beginPath, $endPath));
     }
 }
