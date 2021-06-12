@@ -5,13 +5,14 @@ namespace Project\Package\GenDiff;
 use Symfony\Component\Yaml\Yaml;
 use Docopt;
 
-use function Project\Package\Parsers\parserFile;
-use function Project\Package\Ast\compareIter;
-use function Project\Package\Stylish\displayResult;
+// use function Project\Package\Parsers\parserFile;
+// use function Project\Package\Ast\compareIter;
+// use function Project\Package\Formatters\Stylish\displayResult;
+use function Project\Package\Formatters\selectFormat;
 
-function genDiff(string $path1, string $path2, string $formatName = 'stylish'): array
+function genDiff(string $path1, string $path2, string $format = 'stylish'): string
 {
-    return compareIter(parserFile($path1), parserFile($path2));
+    return selectFormat($path1, $path2, $format);
 }
 
 function run(): void
@@ -36,5 +37,7 @@ function run(): void
 
     $path1 = $args['<firstFile>'];
     $path2 = $args['<secondFile>'];
-    print(displayResult(genDiff($path1, $path2)));
+    $style = $args['--format'];
+    $diff = genDiff($path1, $path2, $style);
+    print_r($diff);
 }

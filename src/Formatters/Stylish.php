@@ -1,6 +1,6 @@
 <?php
 
-namespace Project\Package\Stylish;
+namespace Project\Package\Formatters\Stylish;
 
 function toString($value): string
 {
@@ -71,7 +71,7 @@ function stringifyValue(array $arr, string $nextIndent): string
     return $result;
 }
 
-function displayResult(array $arr, int $depth = 1, int $spacesCount = 4): string
+function displayStylish(array $arr, int $depth = 1, int $spacesCount = 4): string
 {
     $indentSize = $depth * $spacesCount;
     $currentIndent = str_repeat(' ', $indentSize);
@@ -80,7 +80,7 @@ function displayResult(array $arr, int $depth = 1, int $spacesCount = 4): string
     $listForReduce = array_keys($arr);
     $lines = array_reduce($listForReduce, function ($acc, $item) use ($arr, $currentIndent, $nextIndent, $depth) {
         $key = $arr[$item]['key'];
-        $value = displayResult($arr[$item]['children'], $depth + 1);
+        $value = displayStylish($arr[$item]['children'], $depth + 1);
         if ($arr[$item]['type'] === 'nested') {
             $acc[] = $currentIndent . $key . ': ' . $value;
         } else {

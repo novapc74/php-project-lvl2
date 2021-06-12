@@ -12,13 +12,15 @@ use function Project\Package\Parsers\isFileYaml;
 use function Project\Package\Ast\makeStructure;
 use function Project\Package\Ast\compareIter;
 
-use function Project\Package\Stylish\toString;
-use function Project\Package\Stylish\stringifyValue;
-use function Project\Package\Stylish\convertObject;
-use function Project\Package\Stylish\stringify;
-use function Project\Package\Stylish\displayResult;
+use function Project\Package\Formatters\Stylish\toString;
+use function Project\Package\Formatters\Stylish\stringifyValue;
+use function Project\Package\Formatters\Stylish\convertObject;
+use function Project\Package\Formatters\Stylish\stringify;
+use function Project\Package\Formatters\Stylish\displayStylish;
 
 use function Project\Package\GenDiff\genDiff;
+
+use function Project\Package\Formatters\selectFormat;
 
 class GenDiffTest extends TestCase
 {
@@ -101,13 +103,13 @@ class GenDiffTest extends TestCase
         $this->assertTrue(is_string(stringify($this->testArray)));
     }
 
-    public function testDisplayResult()
+    public function testDisplayStylish()
     {
         $expected = '{
   - key: oldValue
   + key: newValue
 }';
-        $this->assertEquals($expected, displayResult([$this->testArray]));
+        $this->assertEquals($expected, displayStylish([$this->testArray]));
     }
 
     public function testMakeStructure()
@@ -120,12 +122,9 @@ class GenDiffTest extends TestCase
     {
         $beginObject = new stdClass();
         $beginObject->common = 'oldValue';
-
         $endObject = new stdClass();
         $endObject->common = 'newValue';
-
         $arrTest = [$this->testArray2];
-
         $this->assertEquals($arrTest, compareIter($beginObject, $endObject));
     }
 
@@ -133,9 +132,12 @@ class GenDiffTest extends TestCase
     {
         $beginPath = 'tests/fixtures/simpleFixtures/first.json';
         $endPath = 'tests/fixtures/simpleFixtures/second.json';
-
-        $arrTest = [$this->testArray2];
-
-        $this->assertEquals($arrTest, genDiff($beginPath, $endPath));
+        $this->assertTrue(is_string(genDiff($beginPath, $endPath, 'stylish')));
+    }
+    public function testSelectFormat()
+    {
+        $path1 = $this->pathToBeginFlatJson;
+        $path2 = $this->pathToEndFlatJson;
+        $this->assertTrue(is_string(selectFormat($path1, $path2, 'stylish')));
     }
 }

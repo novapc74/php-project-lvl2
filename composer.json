@@ -30,8 +30,9 @@
      "files":[
         "src/GenDiff.php",
         "src/Parsers.php",
-        "src/Stylish.php",
-        "src/Ast.php"
+        "src/Formatters/Stylish.php",
+        "src/Ast.php",
+        "src/Formatters.php"
          ]
     },
     "scripts": {
