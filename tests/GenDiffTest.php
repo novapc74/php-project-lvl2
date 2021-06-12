@@ -22,6 +22,9 @@ use function Project\Package\GenDiff\genDiff;
 
 use function Project\Package\Formatters\selectFormat;
 
+use function Project\Package\Formatters\Plain\makeString;
+use function Project\Package\Formatters\Plain\displayPlain;
+
 class GenDiffTest extends TestCase
 {
     public function setUp(): void
@@ -139,5 +142,19 @@ class GenDiffTest extends TestCase
         $path1 = $this->pathToBeginFlatJson;
         $path2 = $this->pathToEndFlatJson;
         $this->assertTrue(is_string(selectFormat($path1, $path2, 'stylish')));
+    }
+
+    public function testMakeString()
+    {
+        $arr = $this->testArray;
+        $parent = 'parent.';
+        $expected = "'parent.key' was updated. From oldValue to newValue";
+        $this->assertEquals($expected, makeString($arr, $parent));
+    }
+
+    public function testDisplayPlain()
+    {
+        $arrTest = [$this->testArray2];
+        $this->assertTrue(is_string(displayPlain($arrTest)));
     }
 }

@@ -31,6 +31,7 @@
         "src/GenDiff.php",
         "src/Parsers.php",
         "src/Formatters/Stylish.php",
+        "src/Formatters/Plain.php",
         "src/Ast.php",
         "src/Formatters.php"
          ]
