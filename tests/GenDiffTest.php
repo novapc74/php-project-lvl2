@@ -25,6 +25,8 @@ use function Project\Package\Formatters\selectFormat;
 use function Project\Package\Formatters\Plain\makeString;
 use function Project\Package\Formatters\Plain\displayPlain;
 
+use function Project\Package\Formatters\Json\displayJson;
+
 class GenDiffTest extends TestCase
 {
     public function setUp(): void
@@ -156,5 +158,19 @@ class GenDiffTest extends TestCase
     {
         $arrTest = [$this->testArray2];
         $this->assertTrue(is_string(displayPlain($arrTest)));
+    }
+    public function testDisplayJson()
+    {
+        $arrTest = [$this->testArray2];
+        $expected = '[
+    {
+        "key": "common",
+        "type": "replace",
+        "oldValue": "oldValue",
+        "newValue": "newValue",
+        "children": []
+    }
+]';
+        $this->assertEquals($expected, displayJson($arrTest));
     }
 }

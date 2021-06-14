@@ -12,3 +12,6 @@
 
 ### asciinema genDiff with PLAIN ore STYLISH format
 [![asciicast](https://asciinema.org/a/D4v5DMwQu9A4eErGBf8v7jQyt.svg)](https://asciinema.org/a/D4v5DMwQu9A4eErGBf8v7jQyt)
+
+### ascinema display diff JSON format 
+[![asciicast](https://asciinema.org/a/1NIJJ9NrWdPfIPUm3m5VGMPmZ.svg)](https://asciinema.org/a/1NIJJ9NrWdPfIPUm3m5VGMPmZ)
