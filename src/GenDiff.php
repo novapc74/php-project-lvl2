@@ -2,8 +2,9 @@
 
 namespace Project\Package\GenDiff;
 
-use Docopt;
 use Symfony\Component\Yaml\Yaml;
+use Docopt;
+
 use function Project\Package\Formatters\selectFormat;
 
 function genDiff(string $path1, string $path2, string $format = 'stylish'): string
