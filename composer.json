@@ -1,7 +1,7 @@
 {
-    "name": "makarov_vyacheslav/gen-diff",
+    "name": "hexlet/code",
     "homepage": "https://github.com/novapc74/php-project-lvl2.git",
-    "description":"realeas gendiff",
+    "description":"realeas genDiff",
     "license":"MIT",
     "authors": [
         {
