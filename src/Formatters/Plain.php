@@ -2,45 +2,57 @@
 
 namespace Project\Package\Formatters\Plain;
 
-use function Project\Package\Formatters\Stylish\toString;
-
-function makeString(array $arr, string $spaceCount): string
+function makeString(array $arr, string $node = null): string
 {
     $key = $arr['key'];
-    if (is_object($arr['oldValue'])) {
-        $newValue = "'" . toString($arr['newValue']) . "'";
+    $type = $arr['type'];
+    $oldValue = $arr['oldValue'];
+    $newValue = $arr['newValue'];
+    !$node ?: $node .= '.';
+
+    if (is_object($oldValue) && is_object($newValue)) {
         $oldValue = '[complex value]';
-    } elseif (is_object($arr['newValue'])) {
         $newValue = '[complex value]';
-        $oldValue = "'" . toString($arr['oldValue']) . "'";
+    } elseif (is_object($oldValue)) {
+        $oldValue = '[complex value]';
+        $newValue = is_null($newValue) ? 'null' : trim(var_export($newValue, true), '"');
+    } elseif (is_object($newValue)) {
+        $newValue = '[complex value]';
+        $oldValue = is_null($oldValue) ? 'null' : trim(var_export($oldValue, true), '"');
     } else {
-        $oldValue = toString($arr['oldValue']);
-        $newValue = toString($arr['newValue']);
+        $oldValue = is_null($oldValue) ? 'null' : trim(var_export($oldValue, true), '"');
+        $newValue = is_null($newValue) ? 'null' : trim(var_export($newValue, true), '"');
     }
-    switch ($arr['type']) {
+
+    switch ($type) {
         case 'removed':
-            $string = "'{$spaceCount}{$key}' was removed";
+            $result = "Property '{$node}{$key}' was removed";
             break;
         case 'added':
-            $string = "'{$spaceCount}{$key}' was added with value: {$newValue}";
+            $result = "Property '{$node}{$key}' was added with value: {$newValue}";
             break;
         case 'replace':
-            $string = "'{$spaceCount}{$key}' was updated. From {$oldValue} to {$newValue}";
+            $result = "Property '{$node}{$key}' was updated. From {$oldValue} to {$newValue}";
+            break;
+        default:
+            throw new Error('Unknown order state: in \Formatters\makeString => $type = {$type}!');
             break;
     }
-    return $string;
+    return $result;
 }
 
-function displayPlain($arr, $spaceCount = '')
+function displayPlain(array $arr, string $node = null): string
 {
     $listForReduce = array_keys($arr);
-    $lines = array_reduce($listForReduce, function ($acc, $item) use ($arr, $spaceCount) {
-        $spaceCount === '' ? $key = $arr[$item]['key'] : $key = $spaceCount . '.' . $arr[$item]['key'];
-        if ($arr[$item]['type'] === 'nested') {
-            $acc[] = displayPlain($arr[$item]['children'], $key);
+    $lines = array_reduce($listForReduce, function ($acc, $item) use ($arr, $node) {
+        if ($arr[$item]['type'] === 'nested' && !$node) {
+            $node = $arr[$item]['key'];
+            $acc[] = displayPlain($arr[$item]['children'], $node);
+        } elseif ($arr[$item]['type'] === 'nested') {
+            $node .= '.' . $arr[$item]['key'];
+            $acc[] = displayPlain($arr[$item]['children'], $node);
         } elseif ($arr[$item]['type'] !== 'unchanged') {
-            $spaceCount !== '' ? $spaceCount .= "." : '';
-            $acc[] = 'Property ' . makeString($arr[$item], $spaceCount);
+            $acc[] = makeString($arr[$item], $node);
         }
         return $acc;
     }, []);

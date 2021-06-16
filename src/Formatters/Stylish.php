@@ -2,25 +2,6 @@
 
 namespace Project\Package\Formatters\Stylish;
 
-function toString($value): string
-{
-    if (is_null($value)) {
-        return 'null';
-    }
-     return trim(var_export($value, true), "'");
-}
-
-function convertObject($object)
-{
-    if (is_object($object)) {
-        return array_map(__FUNCTION__, get_object_vars($object));
-    } elseif (is_array($object)) {
-        return array_map(__FUNCTION__, $object);
-    } else {
-        return $object;
-    }
-}
-
 function stringify(array $value, int $spacesCount = 1): string
 {
     $iter = function ($currentValue, $depth) use (&$iter, $spacesCount) {
@@ -30,11 +11,10 @@ function stringify(array $value, int $spacesCount = 1): string
         $indentSize = $depth * $spacesCount;
         $currentIndent = str_repeat(' ', $indentSize + 4);
         $bracketIndent = str_repeat(' ', $indentSize);
-        $lines = array_map(
-            fn($key, $val) => "{$currentIndent}{$key}: {$iter($val, $depth + 1)}",
-            array_keys($currentValue),
-            $currentValue
-        );
+        $lines = array_map(function ($key, $val) use ($currentIndent, $iter, $depth) {
+            is_object($val) ? $val = get_object_vars($val) : '';
+            return $result = "{$currentIndent}{$key}: {$iter($val, $depth + 1)}";
+        }, array_keys($currentValue), $currentValue);
         return implode(PHP_EOL, ['{', ...$lines, "{$bracketIndent}}"]);
     };
     return $iter($value, 1);
@@ -43,16 +23,22 @@ function stringify(array $value, int $spacesCount = 1): string
 function stringifyValue(array $arr, string $nextIndent): string
 {
     $key = $arr['key'];
-    if (is_object($arr['oldValue'])) {
-        $old = stringify(convertObject($arr['oldValue']), strlen($nextIndent) + 2);
-        return "- {$key}: {$old}{$nextIndent}";
-    } elseif (is_object($arr['newValue'])) {
-        $new = stringify(convertObject($arr['newValue']), strlen($nextIndent) + 2);
-        return "+ {$key}: {$new}{$nextIndent}";
+    $type = $arr['type'];
+    $oldValue = $arr['oldValue'];
+    $newValue = $arr['newValue'];
+
+    if (is_object($oldValue)) {
+        $oldValue = get_object_vars($oldValue);
+        $oldValue = stringify($oldValue, strlen($nextIndent) + 2) . $nextIndent;
+    } elseif (is_object($newValue)) {
+        $newValue = get_object_vars($newValue);
+        $newValue = stringify($newValue, strlen($nextIndent) + 2) . $nextIndent;
     }
-    $oldValue = toString($arr['oldValue']);
-    $newValue = toString($arr['newValue']);
-    switch ($arr['type']) {
+
+    $oldValue = is_null($oldValue) ? 'null' : trim(var_export($oldValue, true), "'");
+    $newValue = is_null($newValue) ? 'null' : trim(var_export($newValue, true), "'");
+
+    switch ($type) {
         case 'replace':
             $result = "- {$key}: {$oldValue}" . PHP_EOL;
             $result .= "{$nextIndent}+ {$key}: {$newValue}";
@@ -65,6 +51,9 @@ function stringifyValue(array $arr, string $nextIndent): string
             break;
         case 'unchanged':
             $result = "  {$key}: {$oldValue}";
+            break;
+        default:
+            throw new Error('Unknown order state: in \Stylish\stringifyValue => $type = {$type}!');
             break;
     }
     return $result;

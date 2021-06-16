@@ -10,10 +10,12 @@ use function Project\Package\Formatters\Json\displayJson;
 
 function selectFormat(string $path1, string $path2, string $style): string
 {
+    $parserPath1 = parserFile($path1);
+    $parserPath2 = parserFile($path2);
     if ($style === 'json') {
-        return displayJson(compareIter(parserFile($path1), parserFile($path2)));
+        return displayJson(compareIter($parserPath1, $parserPath2));
     } elseif ($style === 'plain') {
-        return displayPlain(compareIter(parserFile($path1), parserFile($path2)));
+        return displayPlain(compareIter($parserPath1, $parserPath2));
     }
-    return displayStylish(compareIter(parserFile($path1), parserFile($path2)));
+    return displayStylish(compareIter($parserPath1, $parserPath2));
 }

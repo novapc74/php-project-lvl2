@@ -2,18 +2,7 @@
 
 namespace Project\Package\Ast;
 
-function makeStructure(array $values): array
-{
-    return [
-        'key' => $values[0],
-        'type' => $values[1],
-        'oldValue' => $values[2],
-        'newValue' => $values[3],
-        'children' => $values[4]
-    ];
-}
-
-function compareIter(object $beginObject = null, object $endObject = null): array
+function compareIter(object $beginObject, object $endObject): array
 {
     $keysBeginObject = array_keys(get_object_vars($beginObject));
     $keysEndObject = array_keys(get_object_vars($endObject));
@@ -27,15 +16,45 @@ function compareIter(object $beginObject = null, object $endObject = null): arra
         $newValue = $endObject->$key ?? null;
 
         if (is_object($oldValue) && is_object($newValue)) {
-            $acc[] = makeStructure([$key, 'nested', null, null, compareIter($oldValue, $newValue)]);
+            $acc[] = [
+                'key' => $key,
+                'type' => 'nested',
+                'oldValue' => null,
+                'newValue' => null,
+                'children' => compareIter($oldValue, $newValue)
+            ];
         } elseif (!property_exists($beginObject, $key)) {
-                $acc[] = makeStructure([$key, 'added', $oldValue, $newValue, []]);
+            $acc[] = [
+                'key' => $key,
+                'type' => 'added',
+                'oldValue' => $oldValue,
+                'newValue' => $newValue,
+                'children' => []
+            ];
         } elseif (!property_exists($endObject, $key)) {
-                $acc[] = makeStructure([$key, 'removed', $oldValue, $newValue, []]);
+            $acc[] = [
+                'key' => $key,
+                'type' => 'removed',
+                'oldValue' => $oldValue,
+                'newValue' => $newValue,
+                'children' => []
+            ];
         } elseif ($oldValue === $newValue) {
-            $acc[] = makeStructure([$key, 'unchanged', $oldValue, $newValue, []]);
+            $acc[] = [
+                'key' => $key,
+                'type' => 'unchanged',
+                'oldValue' => $oldValue,
+                'newValue' => $newValue,
+                'children' => []
+            ];
         } else {
-            $acc[] = makeStructure([$key, 'replace', $oldValue, $newValue, []]);
+            $acc[] = [
+                'key' => $key,
+                'type' => 'replace',
+                'oldValue' => $oldValue,
+                'newValue' => $newValue,
+                'children' => []
+            ];
         }
         return $acc;
     }, []);

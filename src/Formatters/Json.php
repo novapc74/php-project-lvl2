@@ -2,7 +2,12 @@
 
 namespace Project\Package\Formatters\Json;
 
-function displayJson($arr): string
+function displayJson(array $arr): string
 {
-    return json_encode($arr, JSON_PRETTY_PRINT);
+    $listForReduce = array_keys($arr);
+    $list = array_reduce($listForReduce, function ($acc, $item) use ($arr) {
+        $acc[] = json_encode($arr[$item], JSON_PRETTY_PRINT);
+        return $acc;
+    }, []);
+    return implode(PHP_EOL, [...$list]);
 }

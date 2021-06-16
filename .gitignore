@@ -5,3 +5,5 @@ logs
 *.swp
 *.cache
 build
+/work/
+/coverage/
