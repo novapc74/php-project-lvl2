@@ -6,8 +6,8 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Component\Yaml\Yaml;
 use stdClass;
 
-use function Differ\Differ\Ast\makeStructure;
-use function Differ\Differ\Ast\compareIter;
+use function Differ\Ast\makeStructure;
+use function Differ\Ast\compareIter;
 
 class AstTest extends TestCase
 {

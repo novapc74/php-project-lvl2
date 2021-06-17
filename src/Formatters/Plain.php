@@ -1,6 +1,6 @@
 <?php
 
-namespace Differ\Differ\Formatters\Plain;
+namespace Differ\Formatters\Plain;
 
 function makeString(array $arr, string $node = null): string
 {

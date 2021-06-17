@@ -1,6 +1,6 @@
 <?php
 
-namespace Differ\Differ\Ast;
+namespace Differ\Ast;
 
 function compareIter(object $beginObject, object $endObject): array
 {

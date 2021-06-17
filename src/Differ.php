@@ -1,11 +1,11 @@
 <?php
 
-namespace Differ\Differ\GenDiff;
+namespace Differ\Differ;
 
 use Symfony\Component\Yaml\Yaml;
 use Docopt;
 
-use function Differ\Differ\Formatters\selectFormat;
+use function Differ\Formatters\selectFormat;
 
 function genDiff(string $path1, string $path2, string $format = 'stylish'): string
 {

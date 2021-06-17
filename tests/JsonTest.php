@@ -3,7 +3,7 @@
 namespace Differ\Phpunit\Tests\JsonTest;
 
 use PHPUnit\Framework\TestCase;
-use function Differ\Differ\Formatters\Json\displayJson;
+use function Differ\Formatters\Json\displayJson;
 
 class JsonTest extends TestCase
 {

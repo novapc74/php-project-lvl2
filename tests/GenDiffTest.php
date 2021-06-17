@@ -6,12 +6,12 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Component\Yaml\Yaml;
 use stdClass;
 
-use function Differ\Differ\Parsers\parserFile;
-use function Differ\Differ\Parsers\isFileYaml;
+use function Differ\Parsers\parserFile;
+use function Differ\Parsers\isFileYaml;
 
-use function Differ\Differ\GenDiff\genDiff;
+use function Differ\Differ\genDiff;
 
-use function Differ\Differ\Formatters\selectFormat;
+use function Differ\Formatters\selectFormat;
 
 class GenDiffTest extends TestCase
 {
