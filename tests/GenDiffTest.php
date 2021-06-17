@@ -60,12 +60,6 @@ class GenDiffTest extends TestCase
         $this->assertEquals(0, isFileYaml($fileNameJson));
     }
 
-    public function testGenDiff()
-    {
-        $beginPath = 'tests/fixtures/simpleFixtures/first.json';
-        $endPath = 'tests/fixtures/simpleFixtures/second.json';
-        $this->assertTrue(is_string(genDiff($beginPath, $endPath, 'stylish')));
-    }
     public function testSelectFormat()
     {
         $path1 = $this->pathToBeginFlatJson;

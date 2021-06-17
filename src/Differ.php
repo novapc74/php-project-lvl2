@@ -7,12 +7,7 @@ use Docopt;
 
 use function Differ\Formatters\selectFormat;
 
-function genDiff(string $path1, string $path2, string $format = 'stylish'): string
-{
-    return selectFormat($path1, $path2, $format) . PHP_EOL;
-}
-
-function run(): void
+function genDiff(): void
 {
     $doc = <<<DOC
     Generate diff
@@ -27,6 +22,8 @@ function run(): void
     DOC;
     require_once __DIR__ . '/../vendor/docopt/docopt/src/docopt.php';
     $args = Docopt::handle($doc, array('version' => 'GenDiff 2.0'));
-    $diff = genDiff($args['<firstFile>'], $args['<secondFile>'], $args['--format']);
+    $format = $args['--format'];
+    $sormat = is_null($format) ? 'stylish' : $format;
+    $diff = selectFormat($args['<firstFile>'], $args['<secondFile>'], $format);
     print_r($diff);
 }
