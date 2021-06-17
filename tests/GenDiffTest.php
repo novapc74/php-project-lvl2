@@ -1,17 +1,17 @@
 <?php
 
-namespace Project\Phpunit\Tests\GenDiffTest;
+namespace Differ\Phpunit\Tests\GenDiffTest;
 
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Yaml\Yaml;
 use stdClass;
 
-use function Project\Package\Parsers\parserFile;
-use function Project\Package\Parsers\isFileYaml;
+use function Differ\Differ\Parsers\parserFile;
+use function Differ\Differ\Parsers\isFileYaml;
 
-use function Project\Package\GenDiff\genDiff;
+use function Differ\Differ\GenDiff\genDiff;
 
-use function Project\Package\Formatters\selectFormat;
+use function Differ\Differ\Formatters\selectFormat;
 
 class GenDiffTest extends TestCase
 {
@@ -59,8 +59,6 @@ class GenDiffTest extends TestCase
         $this->assertEquals(1, isFileYaml($fileNameYml));
         $this->assertEquals(0, isFileYaml($fileNameJson));
     }
-
-
 
     public function testGenDiff()
     {

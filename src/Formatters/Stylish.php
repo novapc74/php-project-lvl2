@@ -1,6 +1,6 @@
 <?php
 
-namespace Project\Package\Formatters\Stylish;
+namespace Differ\Differ\Formatters\Stylish;
 
 function stringify(array $value, int $spacesCount = 1): string
 {

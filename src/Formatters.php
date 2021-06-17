@@ -1,12 +1,12 @@
 <?php
 
-namespace Project\Package\Formatters;
+namespace Differ\Differ\Formatters;
 
-use function Project\Package\Ast\compareIter;
-use function Project\Package\Parsers\parserFile;
-use function Project\Package\Formatters\Stylish\displayStylish;
-use function Project\Package\Formatters\Plain\displayPlain;
-use function Project\Package\Formatters\Json\displayJson;
+use function Differ\Differ\Ast\compareIter;
+use function Differ\Differ\Parsers\parserFile;
+use function Differ\Differ\Formatters\Stylish\displayStylish;
+use function Differ\Differ\Formatters\Plain\displayPlain;
+use function Differ\Differ\Formatters\Json\displayJson;
 
 function selectFormat(string $path1, string $path2, string $style): string
 {

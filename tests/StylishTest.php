@@ -1,12 +1,12 @@
 <?php
 
-namespace Project\Phpunit\Tests\StylishTest;
+namespace Differ\Phpunit\Tests\StylishTest;
 
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Yaml\Yaml;
-use function Project\Package\Formatters\Stylish\stringifyValue;
-use function Project\Package\Formatters\Stylish\stringify;
-use function Project\Package\Formatters\Stylish\displayStylish;
+use function Differ\Differ\Formatters\Stylish\stringifyValue;
+use function Differ\Differ\Formatters\Stylish\stringify;
+use function Differ\Differ\Formatters\Stylish\displayStylish;
 
 class StylishTest extends TestCase
 {

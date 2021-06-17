@@ -1,10 +1,10 @@
 <?php
 
-namespace Project\Phpunit\Tests\PlainTest;
+namespace Differ\Phpunit\Tests\PlainTest;
 
 use PHPUnit\Framework\TestCase;
-use function Project\Package\Formatters\Plain\displayPlain;
-use function Project\Package\Formatters\Plain\makeString;
+use function Differ\Differ\Formatters\Plain\displayPlain;
+use function Differ\Differ\Formatters\Plain\makeString;
 
 class PlainTest extends TestCase
 {

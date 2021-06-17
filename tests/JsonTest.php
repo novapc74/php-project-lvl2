@@ -1,9 +1,9 @@
 <?php
 
-namespace Project\Phpunit\Tests\JsonTest;
+namespace Differ\Phpunit\Tests\JsonTest;
 
 use PHPUnit\Framework\TestCase;
-use function Project\Package\Formatters\Json\displayJson;
+use function Differ\Differ\Formatters\Json\displayJson;
 
 class JsonTest extends TestCase
 {

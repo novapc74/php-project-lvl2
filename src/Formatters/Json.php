@@ -1,6 +1,6 @@
 <?php
 
-namespace Project\Package\Formatters\Json;
+namespace Differ\Differ\Formatters\Json;
 
 function displayJson(array $arr): string
 {
