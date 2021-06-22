@@ -16,7 +16,7 @@ function selectFormat(string $path1, string $path2): string
     Generate diff
 
     Usage:
-      gendiff [--format <fmt>] <firstFile> <secondFile>
+      genDiff [--format <fmt>] <firstFile> <secondFile>
 
     Options:
       --format <fmt>                Report format [default: stylish]
