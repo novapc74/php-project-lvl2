@@ -3,7 +3,6 @@
 namespace Differ\Phpunit\Tests\StylishTest;
 
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\Yaml\Yaml;
 use function Differ\Formatters\Stylish\stringifyValue;
 use function Differ\Formatters\Stylish\stringify;
 use function Differ\Formatters\Stylish\displayStylish;

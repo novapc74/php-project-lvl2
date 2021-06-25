@@ -4,16 +4,10 @@ namespace Differ\Parsers;
 
 use Symfony\Component\Yaml\Yaml;
 
-function isFileYaml(string $nameFile): string
+function parserFile(string $path, string $typeFile): object
 {
-    $expansion = explode('.', $nameFile)[1];
-    return $expansion == 'yaml' | $expansion == 'yml';
-}
-
-function parserFile(string $path): object
-{
-    if (isFileYaml($path)) {
-        return Yaml::parse(file_get_contents($path), Yaml::PARSE_OBJECT_FOR_MAP);
+    if ($typeFile === 'json') {
+        return json_decode(file_get_contents($path));
     }
-    return json_decode(file_get_contents($path));
+        return Yaml::parse(file_get_contents($path), Yaml::PARSE_OBJECT_FOR_MAP);
 }

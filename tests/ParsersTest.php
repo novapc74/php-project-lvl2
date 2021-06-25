@@ -4,10 +4,8 @@ namespace Differ\Phpunit\Tests\ParsersTest;
 
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Yaml\Yaml;
-use stdClass;
 
 use function Differ\Parsers\parserFile;
-use function Differ\Parsers\isFileYaml;
 
 class ParsersTest extends TestCase
 {
@@ -15,23 +13,16 @@ class ParsersTest extends TestCase
     {
         $this->pathToBeginFlatJson = 'tests/fixtures/flatFixtures/beginFileJson.json';
         $this->pathToEndFlatYaml = 'tests/fixtures/flatFixtures/endFileYaml.yaml';
-        $this->pathToBeginTreeJson = 'tests/fixtures/treeFixtures/beginFile.json';
-        $this->pathToEndTreeJson = 'tests/fixtures/treeFixtures/endFile.json';
     }
 
-    public function testParserFile()
+    public function testParsersFile()
     {
-        $this->assertTrue(is_object(parserFile($this->pathToBeginFlatJson)));
-        $this->assertTrue(is_object(parserFile($this->pathToEndFlatYaml)));
-    }
+        $expected = json_decode(file_get_contents($this->pathToBeginFlatJson));
+        $this->assertEquals($expected, parserFile($this->pathToBeginFlatJson, 'json'));
+        $this->assertTrue(is_object(parserFile($this->pathToBeginFlatJson, 'json')));
 
-    public function testIsFileYaml()
-    {
-        $fileNameYaml = 'test.yaml';
-        $fileNameYml = 'test.yml';
-        $fileNameJson = 'test.json';
-        $this->assertEquals(1, isFileYaml($fileNameYaml));
-        $this->assertEquals(1, isFileYaml($fileNameYml));
-        $this->assertEquals(0, isFileYaml($fileNameJson));
+        $expected1 = Yaml::parse(file_get_contents($this->pathToEndFlatYaml), Yaml::PARSE_OBJECT_FOR_MAP);
+        $this->assertEquals($expected1, parserFile($this->pathToEndFlatYaml, 'yaml'));
+        $this->assertTrue(is_object(parserFile($this->pathToEndFlatYaml, 'yaml')));
     }
 }

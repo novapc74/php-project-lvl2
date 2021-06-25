@@ -34,7 +34,7 @@
         "src/Formatters/Plain.php",
         "src/Formatters/Json.php",
         "src/Ast.php",
-        "src/Formatters.php"
+        "src/Extension.php"
          ]
     },
     "scripts": {

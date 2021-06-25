@@ -10,6 +10,47 @@ if (file_exists($autoloadPath1)) {
         require_once $autoloadPath2;
 }
 
+// use function Differ\Differ\genDiff;
+use function Differ\Extension\isFileExtension;
+use function Differ\Parsers\parserFile;
+use function Differ\Ast\compareIter;
 use function Differ\Differ\genDiff;
 
-genDiff();
+
+    $doc = <<<DOC
+    Generate diff
+
+    Usage:
+      ./bin/genDiff (-h|--help)
+      ./bin/genDiff (-v|--version)
+      ./bin/genDiff [--format <fmt>] <firstFile> <secondFile>
+
+    Options:
+      -h --help                     Show this screen
+      -v --version                  Show version
+      --format <fmt>                Report format [default: stylish]
+    DOC;
+    $args = Docopt::handle($doc, array('version' => 'GenDiff 2.0'));
+
+    $beginFilePath = $args['<firstFile>'];
+    $endFilePath = $args['<secondFile>'];
+    $styleOutput = $args['--format'];
+
+    $listSupportExtensions = ['yml', 'json', 'yaml'];
+    try {
+        $fileExtensions = isFileExtension($beginFilePath, $endFilePath, $listSupportExtensions);
+    } catch (\Exception $e) {
+       echo $e;
+       exit;
+    }
+
+    $object1 = parserFile($beginFilePath, $fileExtensions);
+    $object2 = parserFile($endFilePath, $fileExtensions);
+
+    $ast = compareIter($object1, $object2);
+    try {
+        echo genDiff($ast, $styleOutput);
+    } catch (\Exception $e) {
+       echo $e;
+       exit;
+    }

@@ -3,10 +3,8 @@
 namespace Differ\Phpunit\Tests\AstTest;
 
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\Yaml\Yaml;
 use stdClass;
 
-use function Differ\Ast\makeStructure;
 use function Differ\Ast\compareIter;
 
 class AstTest extends TestCase
