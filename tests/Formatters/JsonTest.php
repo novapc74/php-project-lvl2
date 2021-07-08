@@ -35,11 +35,13 @@ class JsonTest extends TestCase
                     'children' => [],
                     ];
         // print_r(displayJson($arrTest));
-        $expected ='"common"
+        $expected ='[
+"common"
 "replace"
 "oldValue"
 "newValue"
-[]';
+[]
+]';
         $this->assertEquals($expected, displayJson($arrTest));
     }
 }

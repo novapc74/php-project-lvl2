@@ -38,7 +38,8 @@ class DifferTest extends TestCase
 
         $this->assertEquals($expected2, getDiff($ast1, 'plain'));
 
-        $exprcted3 = '{
+        $exprcted3 = '[
+{
     "key": "",
     "type": "added",
     "oldValue": "oldValue",
@@ -51,7 +52,8 @@ class DifferTest extends TestCase
     "oldValue": "oldValue",
     "newValue": "newValue",
     "children": []
-}';
+}
+]';
         $this->assertEquals($exprcted3, getDiff($ast1, 'json'));
     }
 
@@ -118,7 +120,8 @@ Property 'group3' was added with value: [complex value]";
 }';
         $this->assertEquals($expected2, genDiff($beginFilePath, $endFilePath, 'stylish'));
 
-                $expected3 = '{
+                $expected3 = '[
+{
     "key": "common",
     "type": "nested",
     "oldValue": null,
@@ -263,7 +266,8 @@ Property 'group3' was added with value: [complex value]";
         "fee": 100500
     },
     "children": []
-}';
+}
+]';
         $this->assertEquals($expected3, genDiff($beginFilePath, $endFilePath, 'json'));
     }
 }
