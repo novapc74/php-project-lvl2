@@ -1,0 +1,64 @@
+[
+    {
+        "key": "common",
+        "children": [
+            {
+                "key": "follow",
+                "oldValue": "null",
+                "newValue": "false"
+            },
+            {
+                "key": "setting1",
+                "oldValue": "value1",
+                "newValue": "value2"
+            },
+            {
+                "key": "setting2",
+                "oldValue": "200",
+                "newValue": "null"
+            },
+            {
+            	"key": "setting3",
+            	"oldValue": "true",
+                "newValue": "null"
+            },
+            {
+                "key": "setting4",
+            	"oldValue": "null",
+                "newValue": "blah blah"
+            },
+            {
+            	"key": "setting5",
+            	"oldValue": "null",
+                "newValue": {
+                	"key": "value5"
+                }
+            },
+            {
+            	"key": "setting6",
+            	"children": [
+            		{
+            			"key": "doge",
+            			"children": [
+            				{
+            					"key": "wow",
+            					"oldValue": "",
+            					"newValue": "so much"
+            				}
+            			]
+            		},
+            		{
+            			"key": "key",
+            	    	"oldValue": "value",
+            			"newValue": "value"
+            		}
+            	]
+            }
+		]
+	}
+]           
+            			
+            	
+            	
+                
+                

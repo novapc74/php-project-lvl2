@@ -9,5 +9,5 @@ function displayJson(array $arr): string
         $acc[] = json_encode($arr[$item], JSON_PRETTY_PRINT);
         return $acc;
     }, []);
-    return implode(PHP_EOL, [...$list]);
+    return '[' . PHP_EOL . implode(PHP_EOL, [...$list]) . PHP_EOL . ']';
 }
