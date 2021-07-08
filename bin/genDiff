@@ -10,12 +10,7 @@ if (file_exists($autoloadPath1)) {
         require_once $autoloadPath2;
 }
 
-// use function Differ\Differ\genDiff;
-use function Differ\Extension\isFileExtension;
-use function Differ\Parsers\parserFile;
-use function Differ\Ast\compareIter;
 use function Differ\Differ\genDiff;
-
 
     $doc = <<<DOC
     Generate diff
@@ -36,21 +31,4 @@ use function Differ\Differ\genDiff;
     $endFilePath = $args['<secondFile>'];
     $styleOutput = $args['--format'];
 
-    $listSupportExtensions = ['yml', 'json', 'yaml'];
-    try {
-        $fileExtensions = isFileExtension($beginFilePath, $endFilePath, $listSupportExtensions);
-    } catch (\Exception $e) {
-       echo $e;
-       exit;
-    }
-
-    $object1 = parserFile($beginFilePath, $fileExtensions);
-    $object2 = parserFile($endFilePath, $fileExtensions);
-
-    $ast = compareIter($object1, $object2);
-    try {
-        echo genDiff($ast, $styleOutput);
-    } catch (\Exception $e) {
-       echo $e;
-       exit;
-    }
+    echo genDiff($beginFilePath, $endFilePath, $styleOutput);
