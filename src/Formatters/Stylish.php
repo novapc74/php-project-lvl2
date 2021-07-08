@@ -15,9 +15,9 @@ function stringify(array $value, int $spacesCount = 1): string
             is_object($val) ? $val = get_object_vars($val) : '';
             return $result = "{$currentIndent}{$key}: {$iter($val, $depth + 1)}";
         }, array_keys($currentValue), $currentValue);
-        return implode(PHP_EOL, ['{', ...$lines, "{$bracketIndent}}"]);
+        return implode(PHP_EOL, ["{", ...$lines, "{$bracketIndent}}"]);
     };
-    return $iter($value, 1);
+    return $iter($value, $depth = 1);
 }
 
 function stringifyValue(array $arr, string $nextIndent): string
@@ -29,10 +29,10 @@ function stringifyValue(array $arr, string $nextIndent): string
 
     if (is_object($oldValue)) {
         $oldValue = get_object_vars($oldValue);
-        $oldValue = stringify($oldValue, strlen($nextIndent) + 2) . $nextIndent;
+        $oldValue = stringify($oldValue, strlen($nextIndent) + 2);
     } elseif (is_object($newValue)) {
         $newValue = get_object_vars($newValue);
-        $newValue = stringify($newValue, strlen($nextIndent) + 2) . $nextIndent;
+        $newValue = stringify($newValue, strlen($nextIndent) + 2);
     }
 
     $oldValue = is_null($oldValue) ? 'null' : trim(var_export($oldValue, true), "'");

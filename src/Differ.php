@@ -39,7 +39,7 @@ function genDiff(string $beginFilePath, string $endFilePath, string $styleOutput
 
         $ast = compareIter($object1, $object2);
     try {
-        return getDiff($ast, $styleOutput) . PHP_EOL;
+        return getDiff($ast, $styleOutput);
     } catch (\Exception $e) {
         echo $e;
         exit;
