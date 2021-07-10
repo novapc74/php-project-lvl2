@@ -28,6 +28,6 @@
 //     }
 //     public function testIter()
 //     {
-//         // $this->assertEquals($this->structure, iter($this->arrTest));
+//         $this->assertEquals($this->structure, iter($this->arrTest));
 //     }
 // }

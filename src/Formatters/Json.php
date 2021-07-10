@@ -15,22 +15,25 @@ function stringifyValue(array $arr): string
     } elseif (is_object($newValue)) {
         $newValue = get_object_vars($newValue);
         $newValue = json_encode($newValue);
+    } else {
+        is_string($oldValue) ? $oldValue = '"' . $oldValue . '"' : '';
+        is_string($newValue) ? $newValue = '"' . $newValue . '"' : '';
     }
     $oldValue = is_null($oldValue) ? 'null' : trim(var_export($oldValue, true), "'");
     $newValue = is_null($newValue) ? 'null' : trim(var_export($newValue, true), "'");
 
     switch ($type) {
         case 'replace':
-            $result = '"oldValue":"' . $oldValue . '","newValue":"' . $newValue . '"';
+            $result = '"oldValue":' . $oldValue . ',"newValue":' . $newValue . '';
             break;
         case 'added':
-            $result = '"newValue":"' . $newValue . '"';
+            $result = '"value":' . $newValue . '';
             break;
         case 'removed':
-            $result = '"oldValue":"' . $oldValue . '"';
+            $result = '"value":' . $oldValue . '';
             break;
         case 'unchanged':
-            $result = '"value":"' . $oldValue . '"';
+            $result = '"value":' . $oldValue . '';
             break;
         default:
             throw new Error('Unknown order state: in \Stylish\stringifyValue => $type = {$type}!');
@@ -41,7 +44,6 @@ function stringifyValue(array $arr): string
 
 function iter(array $arr): string
 {
-
     $listForeReduce = array_keys($arr);
     $lines = array_reduce($listForeReduce, function ($acc, $item) use ($arr) {
         $key = $arr[$item]['key'];
@@ -55,7 +57,7 @@ function iter(array $arr): string
             if (is_object($newValue)) {
                 $newValue = json_encode($newValue);
             }
-            $acc[] = '{"key":"' . $key . '","type":"' . $type . ',' . stringifyValue($arr[$item]) . '}';
+            $acc[] = '{"key":"' . $key . '","type":"' . $type . '",' . stringifyValue($arr[$item]) . '}';
         }
         return $acc;
     }, []);

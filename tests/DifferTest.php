@@ -38,7 +38,7 @@ class DifferTest extends TestCase
 
         $this->assertEquals($expected2, getDiff($ast1, 'plain'));
 
-        $exprcted3 = '{"type":"root","children":[{"key":"","type":"added,"newValue":"newValue"},{"key":"","type":"removed,"oldValue":"oldValue"}]}';
+        $exprcted3 = '{"type":"root","children":[{"key":"","type":"added","newValue":"newValue"},{"key":"","type":"removed","oldValue":"oldValue"}]}';
         $this->assertEquals($exprcted3, getDiff($ast1, 'json'));
     }
 
@@ -105,7 +105,8 @@ Property 'group3' was added with value: [complex value]";
 }';
         $this->assertEquals($expected2, genDiff($beginFilePath, $endFilePath, 'stylish'));
 
-        $expected3 = '{"type":"root","children":[{"key":"common","type":"nested","children":[{"key":"follow","type":"added,"newValue":"false"},{"key":"setting1","type":"unchanged,"value":"Value 1"},{"key":"setting2","type":"removed,"oldValue":"200"},{"key":"setting3","type":"replace,"oldValue":"true","newValue":"null"},{"key":"setting4","type":"added,"newValue":"blah blah"},{"key":"setting5","type":"added,"newValue":"{"key5":"value5"}"},{"key":"setting6","type":"nested","children":[{"key":"doge","type":"nested","children":[{"key":"wow","type":"replace,"oldValue":"","newValue":"so much"}]},{"key":"key","type":"unchanged,"value":"value"},{"key":"ops","type":"added,"newValue":"vops"}]}]},{"key":"group1","type":"nested","children":[{"key":"baz","type":"replace,"oldValue":"bas","newValue":"bars"},{"key":"foo","type":"unchanged,"value":"bar"},{"key":"nest","type":"replace,"oldValue":"{"key":"value"}","newValue":"str"}]},{"key":"group2","type":"removed,"oldValue":"{"abc":12345,"deep":{"id":45}}"},{"key":"group3","type":"added,"newValue":"{"deep":{"id":{"number":45}},"fee":100500}"}]}';
+        $expected3 = '{"type":"root","children":[{"key":"common","type":"nested","children":[{"key":"follow","type":"added","newValue":false},{"key":"setting1","type":"unchanged","value":"Value 1"},{"key":"setting2","type":"removed","oldValue":200},{"key":"setting3","type":"replace","oldValue":true,"newValue":null},{"key":"setting4","type":"added","newValue":"blah blah"},{"key":"setting5","type":"added","newValue":{"key5":"value5"}},{"key":"setting6","type":"nested","children":[{"key":"doge","type":"nested","children":[{"key":"wow","type":"replace","oldValue":"","newValue":"so much"}]},{"key":"key","type":"unchanged","value":"value"},{"key":"ops","type":"added","newValue":"vops"}]}]},{"key":"group1","type":"nested","children":[{"key":"baz","type":"replace","oldValue":"bas","newValue":"bars"},{"key":"foo","type":"unchanged","value":"bar"},{"key":"nest","type":"replace","oldValue":{"key":"value"},"newValue":str}]},{"key":"group2","type":"removed","oldValue":{"abc":12345,"deep":{"id":45}}},{"key":"group3","type":"added","newValue":{"deep":{"id":{"number":45}},"fee":100500}}]}';
+
         $this->assertEquals($expected3, genDiff($beginFilePath, $endFilePath, 'json'));
     }
 }
