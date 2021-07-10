@@ -50,12 +50,12 @@ function iter(array $arr): string
         $newValue = $arr[$item]['newValue'];
         $value = iter($arr[$item]['children']);
         if ($arr[$item]['type'] === 'nested') {
-            $acc[] = '{"key":"'. $key .'","type":"'. $type . '","children":'. $value . '}';
+            $acc[] = '{"key":"' . $key . '","type":"' . $type . '","children":' . $value . '}';
         } else {
             if (is_object($newValue)) {
                 $newValue = json_encode($newValue);
             }
-            $acc[] = '{"key":"'. $key . '","type":"'. $type . ',' . stringifyValue($arr[$item]) . '}';
+            $acc[] = '{"key":"' . $key . '","type":"' . $type . ',' . stringifyValue($arr[$item]) . '}';
         }
         return $acc;
     }, []);
