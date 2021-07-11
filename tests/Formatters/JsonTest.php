@@ -5,7 +5,7 @@ namespace Differ\Phpunit\Tests\JsonTest;
 use PHPUnit\Framework\TestCase;
 use function Differ\Formatters\Json\displayJson;
 use function Differ\Formatters\Json\iter;
-use function Differ\Formatters\Json\stringifyValue;
+use function Differ\Formatters\Json\makeString;
 
 class JsonTest extends TestCase
 {
@@ -38,7 +38,7 @@ class JsonTest extends TestCase
             ]]];
         $this->assertEquals($this->structure, displayJson($this->arrTest));
     }
-    public function testStringifyValue()
+    public function testMakeString()
     {
         $structureAdd = '"value":"test"';
         $arrAdd = [
@@ -48,7 +48,7 @@ class JsonTest extends TestCase
             'newValue' => 'test',
             'children' => [
             ]];
-        $this->assertEquals($structureAdd, stringifyValue($arrAdd));
+        $this->assertEquals($structureAdd, makeString($arrAdd));
         $structureRemoved = '"value":""';
         $arrRemoved = [
             'key' => 'common',
@@ -57,6 +57,6 @@ class JsonTest extends TestCase
             'newValue' => 'test',
             'children' => [
             ]];
-        $this->assertEquals($structureRemoved, stringifyValue($arrRemoved));
+        $this->assertEquals($structureRemoved, makeString($arrRemoved));
     }
 }

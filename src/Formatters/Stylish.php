@@ -20,7 +20,7 @@ function stringify(array $value, int $spacesCount = 1): string
     return $iter($value, $depth = 1);
 }
 
-function stringifyValue(array $arr, string $nextIndent): string
+function makeString(array $arr, string $nextIndent): string
 {
     $key = $arr['key'];
     $type = $arr['type'];
@@ -53,7 +53,7 @@ function stringifyValue(array $arr, string $nextIndent): string
             $result = "  {$key}: {$oldValue}";
             break;
         default:
-            throw new Error('Unknown order state: in \Stylish\stringifyValue => $type = {$type}!');
+            throw new Error('Unknown order state: in \Formatters\Stylish\makeString => $type = {$type}!');
             break;
     }
     return $result;
@@ -73,7 +73,7 @@ function displayStylish(array $arr, int $depth = 1): string
         if ($arr[$item]['type'] === 'nested') {
             $acc[] = "{$currentIndent}{$key}: {$value}";
         } else {
-            $acc[] = $nextIndent . stringifyValue($arr[$item], $nextIndent);
+            $acc[] = $nextIndent . makeString($arr[$item], $nextIndent);
         }
         return $acc;
     }, []);

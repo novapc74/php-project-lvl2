@@ -35,7 +35,7 @@ function makeString(array $arr, string $node = null): string
             $result = "Property '{$node}{$key}' was updated. From {$oldValue} to {$newValue}";
             break;
         default:
-            throw new Error('Unknown order state: in \Formatters\makeString => $type = {$type}!');
+            throw new Error('Unknown order state: in \Formatters\Plain\makeString => $type = {$type}!');
             break;
     }
     return $result;

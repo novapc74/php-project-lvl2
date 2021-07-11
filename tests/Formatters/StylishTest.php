@@ -3,7 +3,7 @@
 namespace Differ\Phpunit\Tests\StylishTest;
 
 use PHPUnit\Framework\TestCase;
-use function Differ\Formatters\Stylish\stringifyValue;
+use function Differ\Formatters\Stylish\makeString;
 use function Differ\Formatters\Stylish\stringify;
 use function Differ\Formatters\Stylish\displayStylish;
 
@@ -22,11 +22,11 @@ class StylishTest extends TestCase
             ];
     }
 
-    public function testStringifyValue()
+    public function testMakeString()
     {
         $expected = '- key: oldValue' . PHP_EOL;
         $expected .= '+ key: newValue';
-        $this->assertEquals($expected, stringifyValue($this->testArray, ''));
+        $this->assertEquals($expected, makeString($this->testArray, ''));
     }
 
     public function testStryngify()

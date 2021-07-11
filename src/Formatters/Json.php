@@ -2,7 +2,7 @@
 
 namespace Differ\Formatters\Json;
 
-function stringifyValue(array $arr): string
+function makeString(array $arr): string
 {
     $key = $arr['key'];
     $type = $arr['type'];
@@ -12,31 +12,34 @@ function stringifyValue(array $arr): string
     if (is_object($oldValue)) {
         $oldValue = get_object_vars($oldValue);
         $oldValue = json_encode($oldValue);
+        is_string($newValue) ? $newValue = '"' . $newValue . '"' : '';
     } elseif (is_object($newValue)) {
         $newValue = get_object_vars($newValue);
         $newValue = json_encode($newValue);
+        is_string($oldValue) ? $oldValue = '"' . $oldValue . '"' : '';
     } else {
         is_string($oldValue) ? $oldValue = '"' . $oldValue . '"' : '';
         is_string($newValue) ? $newValue = '"' . $newValue . '"' : '';
     }
+
     $oldValue = is_null($oldValue) ? 'null' : trim(var_export($oldValue, true), "'");
     $newValue = is_null($newValue) ? 'null' : trim(var_export($newValue, true), "'");
 
     switch ($type) {
         case 'replace':
-            $result = '"oldValue":' . $oldValue . ',"newValue":' . $newValue . '';
+            $result = '"oldValue":' . $oldValue . ',"newValue":' . $newValue;
             break;
         case 'added':
-            $result = '"value":' . $newValue . '';
+            $result = '"value":' . $newValue;
             break;
         case 'removed':
-            $result = '"value":' . $oldValue . '';
+            $result = '"value":' . $oldValue;
             break;
         case 'unchanged':
-            $result = '"value":' . $oldValue . '';
+            $result = '"value":' . $oldValue;
             break;
         default:
-            throw new Error('Unknown order state: in \Stylish\stringifyValue => $type = {$type}!');
+            throw new Error('Unknown order state: in \Formatters\Json\makeString => $type = {$type}!');
             break;
     }
     return $result;
@@ -57,7 +60,7 @@ function iter(array $arr): string
             if (is_object($newValue)) {
                 $newValue = json_encode($newValue);
             }
-            $acc[] = '{"key":"' . $key . '","type":"' . $type . '",' . stringifyValue($arr[$item]) . '}';
+            $acc[] = '{"key":"' . $key . '","type":"' . $type . '",' . makeString($arr[$item]) . '}';
         }
         return $acc;
     }, []);
@@ -66,6 +69,5 @@ function iter(array $arr): string
 
 function displayJson(array $arr): string
 {
-    $result = str_replace('}{', '},{', iter($arr));
-    return '{"type":"root","children":' . $result . '}';
+    return '{"type":"root","children":' . str_replace('}{', '},{', iter($arr)) . '}';
 }
