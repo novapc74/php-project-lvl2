@@ -8,20 +8,7 @@ function compareIter(object $beginObject, object $endObject): array
     $keysEndObject = array_keys(get_object_vars($endObject));
     $listForReduce = array_unique(array_merge($keysBeginObject, $keysEndObject));
 
-    // sort($listForReduce, SORT_STRING);
-
-    uksort($listForReduce, function ($a, $b) {
-        if (is_int($a) && is_int($b)) {
-            return $a - $b;
-        }
-        if (is_int($a) && !is_int($b)) {
-            return 1;
-        }
-        if (!is_int($a) && is_int($b)) {
-            return -1;
-        }
-        return strnatcasecmp($a, $b);
-    });
+    sort($listForReduce, SORT_STRING);
 
     $ast = array_reduce($listForReduce, function ($acc, $key) use ($beginObject, $endObject) {
 
