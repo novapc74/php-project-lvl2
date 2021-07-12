@@ -2,8 +2,6 @@
 
 namespace Differ\Formatters\Json;
 
-namespace Differ\Formatters\Json;
-
 function makeString(array $arr): string
 {
     $key = $arr['key'];
