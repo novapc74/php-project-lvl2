@@ -2,6 +2,8 @@
 
 namespace Differ\Formatters\Json;
 
+namespace Differ\Formatters\Json;
+
 function makeString(array $arr): string
 {
     $key = $arr['key'];
@@ -49,18 +51,12 @@ function iter(array $arr): string
 {
     $listForeReduce = array_keys($arr);
     $lines = array_reduce($listForeReduce, function ($acc, $item) use ($arr) {
-        $key = $arr[$item]['key'];
-        $type = $arr[$item]['type'];
-        $children = $arr[$item]['children'];
-        $newValue = $arr[$item]['newValue'];
-        $value = iter($arr[$item]['children']);
         if ($arr[$item]['type'] === 'nested') {
-            $acc[] = '{"key":"' . $key . '","type":"' . $type . '","children":' . $value . '}';
+            $acc[] = '{"key":"' . $arr[$item]['key'] . '","type":"' .
+                $arr[$item]['type'] . '","children":' . iter($arr[$item]['children']) . '}';
         } else {
-            if (is_object($newValue)) {
-                $newValue = json_encode($newValue);
-            }
-            $acc[] = '{"key":"' . $key . '","type":"' . $type . '",' . makeString($arr[$item]) . '}';
+            $acc[] = '{"key":"' . $arr[$item]['key'] . '","type":"' .
+                $arr[$item]['type'] . '",' . makeString($arr[$item]) . '}';
         }
         return $acc;
     }, []);

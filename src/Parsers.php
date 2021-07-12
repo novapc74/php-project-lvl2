@@ -6,8 +6,9 @@ use Symfony\Component\Yaml\Yaml;
 
 function parserFile(string $path, string $typeFile): object
 {
+    $fileContent = file_get_contents($path);
     if ($typeFile === 'json') {
-        return json_decode(file_get_contents($path));
+        return json_decode($fileContent);
     }
-        return Yaml::parse(file_get_contents($path), Yaml::PARSE_OBJECT_FOR_MAP);
+    return Yaml::parse($fileContent, Yaml::PARSE_OBJECT_FOR_MAP);
 }

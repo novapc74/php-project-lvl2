@@ -14,13 +14,10 @@ function getDiff(array $ast, string $style): string
     switch ($style) {
         case 'json':
             return displayJson($ast);
-            break;
         case 'plain':
             return displayPlain($ast);
-            break;
         default:
             return displayStylish($ast);
-            break;
     }
 }
 
@@ -33,11 +30,9 @@ function genDiff(string $beginFilePath, string $endFilePath, string $styleOutput
         echo $e;
         exit;
     }
-
     $object1 = parserFile($beginFilePath, $fileExtensions);
     $object2 = parserFile($endFilePath, $fileExtensions);
-
-        $ast = compareIter($object1, $object2);
+    $ast = compareIter($object1, $object2);
     try {
         return getDiff($ast, $styleOutput);
     } catch (\Exception $e) {

@@ -6,9 +6,9 @@ function compareIter(object $beginObject, object $endObject): array
 {
     $keysBeginObject = array_keys(get_object_vars($beginObject));
     $keysEndObject = array_keys(get_object_vars($endObject));
-    $listForReduce = array_values(array_unique(array_merge($keysBeginObject, $keysEndObject)));
+    $listForReduce = array_unique(array_merge($keysBeginObject, $keysEndObject));
 
-    sort($listForReduce);
+    sort($listForReduce, SORT_STRING);
 
     $ast = array_reduce($listForReduce, function ($acc, $key) use ($beginObject, $endObject) {
 
