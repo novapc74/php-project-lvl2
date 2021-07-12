@@ -2,6 +2,8 @@
 
 namespace Differ\Formatters\Json;
 
+use Symfony\Component\Yaml\Yaml;
+
 function makeString(array $arr): string
 {
     $key = $arr['key'];

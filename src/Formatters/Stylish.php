@@ -2,6 +2,8 @@
 
 namespace Differ\Formatters\Stylish;
 
+use Symfony\Component\Yaml\Yaml;
+
 function stringify(array $value, int $spacesCount = 1): string
 {
     $iter = function ($currentValue, $depth) use (&$iter, $spacesCount) {
@@ -53,6 +55,7 @@ function makeString(array $arr, string $nextIndent): string
             $result = "  {$key}: {$oldValue}";
             break;
         default:
+            print_r($type);
             throw new Error('Unknown order state: in \Formatters\Stylish\makeString => $type = {$type}!');
             break;
     }
