@@ -10,7 +10,7 @@
             if (!$target.data('popover-hover')) {
                 $target.popover('hide');
             }
-        }, 300);
+           }, 300);
      };
 
     $top_link.hide().click(function (event) {
@@ -18,7 +18,7 @@
         $body.animate({scrollTop:0}, 800);
     });
 
-    $window.scroll (function() {
+    $window.scroll(function () {
         if ($window.scrollTop() > offset) {
             $top_link.fadeIn();
         } else {
