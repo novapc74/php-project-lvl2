@@ -3,6 +3,7 @@
 namespace Differ\Phpunit\Tests\JsonTest;
 
 use PHPUnit\Framework\TestCase;
+
 use function Differ\Formatters\Json\displayJson;
 use function Differ\Formatters\Json\iter;
 use function Differ\Formatters\Json\makeString;

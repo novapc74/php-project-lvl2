@@ -3,6 +3,7 @@
 namespace Differ\Phpunit\Tests\PlainTest;
 
 use PHPUnit\Framework\TestCase;
+
 use function Differ\Formatters\Plain\displayPlain;
 use function Differ\Formatters\Plain\makeString;
 

@@ -28,7 +28,7 @@ class DifferTest extends TestCase
                 'children' => []
                 ]
             ];
-        $expected ='{
+        $expected = '{
   + : newValue
   - : oldValue
 }';

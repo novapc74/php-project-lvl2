@@ -3,6 +3,7 @@
 namespace Differ\Phpunit\Tests\StylishTest;
 
 use PHPUnit\Framework\TestCase;
+
 use function Differ\Formatters\Stylish\makeString;
 use function Differ\Formatters\Stylish\stringify;
 use function Differ\Formatters\Stylish\displayStylish;
