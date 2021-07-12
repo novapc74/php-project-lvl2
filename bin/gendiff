@@ -16,9 +16,9 @@ use function Differ\Differ\genDiff;
     Generate diff
 
     Usage:
-      ./bin/genDiff (-h|--help)
-      ./bin/genDiff (-v|--version)
-      ./bin/genDiff [--format <fmt>] <firstFile> <secondFile>
+      ./bin/gendiff (-h|--help)
+      ./bin/gendiff (-v|--version)
+      ./bin/gendiff [--format <fmt>] <firstFile> <secondFile>
 
     Options:
       -h --help                     Show this screen

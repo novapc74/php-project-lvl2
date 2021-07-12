@@ -20,7 +20,7 @@
         "squizlabs/php_codesniffer": "^3.6"
     },
     "bin": [
-        "bin/genDiff"
+        "bin/gendiff"
    ],
     "autoload": {
         "psr-4": {
