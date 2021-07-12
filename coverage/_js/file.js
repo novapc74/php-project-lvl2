@@ -8,18 +8,18 @@
 
            setTimeout(function () {
             if (!$target.data('popover-hover')) {
-          $target.popover('hide');
-         }
+                $target.popover('hide');
+            }
         }, 300);
      };
 
-    $top_link.hide().click(function(event) {
+    $top_link.hide().click(function (event) {
         event.preventDefault();
         $body.animate({scrollTop:0}, 800);
     });
 
-    $window.scroll(function() {
-        if($window.scrollTop() > offset) {
+    $window.scroll (function() {
+        if ($window.scrollTop() > offset) {
             $top_link.fadeIn();
         } else {
             $top_link.fadeOut();
@@ -38,10 +38,10 @@
       // popover already displayed
             if ($target.next('.popover').length) {
                 return;
-      }
+            }
 
       // show the popover
-      $container.popover('show');
+            $container.popover('show');
 
       // register mouse events on the popover
             $target.next('.popover:not(.popover-initialized)')
@@ -49,9 +49,9 @@
                 'mouseenter': function () {
                     $target.data('popover-hover', true);
                 },
-            'mouseleave': function () {
-                hidePopover($container);
-            }
+                'mouseleave': function () {
+                    hidePopover($container);
+                }
             })
             .addClass('popover-initialized');
         },
