@@ -6,41 +6,46 @@ function makeString(array $arr, string $node = null): string
 {
     $key = $arr['key'];
     $type = $arr['type'];
-    $oldValue = $arr['oldValue'];
-    $newValue = $arr['newValue'];
-    !$node ?: $node .= '.';
-
-    if (is_object($oldValue) && is_object($newValue)) {
-        $oldValue = '[complex value]';
-        $newValue = '[complex value]';
-    } elseif (is_object($oldValue)) {
-        $oldValue = '[complex value]';
-        $newValue = is_null($newValue) ? 'null' : trim(var_export($newValue, true), '"');
-    } elseif (is_object($newValue)) {
-        $newValue = '[complex value]';
-        $oldValue = is_null($oldValue) ? 'null' : trim(var_export($oldValue, true), '"');
-    } else {
-        $oldValue = is_null($oldValue) ? 'null' : trim(var_export($oldValue, true), '"');
-        $newValue = is_null($newValue) ? 'null' : trim(var_export($newValue, true), '"');
+    if ($node) {
+        $node .= '.';
     }
-
+    if (is_object($arr['oldValue'])) {
+        $oldValue = '[complex value]';
+        if (is_null($arr['newValue'])) {
+            $newValue = 'null';
+        } else {
+            $newValue = trim(var_export($arr['newValue'], true), '"');
+        }
+    } elseif (is_object($arr['newValue'])) {
+        $newValue = '[complex value]';
+        if (is_null($arr['oldValue'])) {
+            $oldValue = 'null';
+        } else {
+            $oldValue = trim(var_export($arr['oldValue'], true), '"');
+        }
+    } else {
+        if (is_null($arr['oldValue'])) {
+            $oldValue = 'null';
+        } else {
+            $oldValue = trim(var_export($arr['oldValue'], true), '"');
+        }
+        if (is_null($arr['newValue'])) {
+            $newValue = 'null';
+        } else {
+            $newValue = trim(var_export($arr['newValue'], true), '"');
+        }
+    }
     switch ($type) {
         case 'removed':
-            $result = "Property '{$node}{$key}' was removed";
-            break;
+            return "Property '{$node}{$key}' was removed";
         case 'added':
-            $result = "Property '{$node}{$key}' was added with value: {$newValue}";
-            break;
+            return "Property '{$node}{$key}' was added with value: {$newValue}";
         case 'replace':
-            $result = "Property '{$node}{$key}' was updated. From {$oldValue} to {$newValue}";
-            break;
+            return "Property '{$node}{$key}' was updated. From {$oldValue} to {$newValue}";
         default:
             throw new Error('Unknown order state: in \Formatters\Plain\makeString => $type = {$type}!');
-            break;
     }
-    return $result;
 }
-
 function displayPlain(array $arr, string $node = null): string
 {
     $listForReduce = array_keys($arr);

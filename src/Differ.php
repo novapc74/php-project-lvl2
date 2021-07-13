@@ -28,7 +28,6 @@ function genDiff(string $beginFilePath, string $endFilePath, string $styleOutput
         $fileExtensions = isFileExtension($beginFilePath, $endFilePath, $listSupportExtensions);
     } catch (\Exception $e) {
         echo $e;
-        exit;
     }
     $object1 = parserFile($beginFilePath, $fileExtensions);
     $object2 = parserFile($endFilePath, $fileExtensions);
@@ -37,6 +36,5 @@ function genDiff(string $beginFilePath, string $endFilePath, string $styleOutput
         return getDiff($ast, $styleOutput);
     } catch (\Exception $e) {
         echo $e;
-        exit;
     }
 }

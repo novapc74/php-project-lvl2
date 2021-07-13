@@ -29,22 +29,16 @@ function makeString(array $arr): string
 
     switch ($type) {
         case 'replace':
-            $result = '"oldValue":' . $oldValue . ',"newValue":' . $newValue;
-            break;
+            return '"oldValue":' . $oldValue . ',"newValue":' . $newValue;
         case 'added':
-            $result = '"value":' . $newValue;
-            break;
+            return '"value":' . $newValue;
         case 'removed':
-            $result = '"value":' . $oldValue;
-            break;
+            return '"value":' . $oldValue;
         case 'unchanged':
-            $result = '"value":' . $oldValue;
-            break;
+            return '"value":' . $oldValue;
         default:
             throw new Error('Unknown order state: in \Formatters\Json\makeString => $type = {$type}!');
-            break;
     }
-    return $result;
 }
 
 function iter(array $arr): string

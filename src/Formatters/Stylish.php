@@ -13,7 +13,7 @@ function stringify(array $value, int $spacesCount = 1): string
         $indentSize = $depth * $spacesCount;
         $currentIndent = str_repeat(' ', $indentSize + 4);
         $bracketIndent = str_repeat(' ', $indentSize);
-        $lines = array_map(function ($key, $val) use ($currentIndent, $iter, $depth) {
+        $lines = array_map(function ($key, $val) use ($currentIndent, $iter, $depth): string {
             is_object($val) ? $val = get_object_vars($val) : '';
             return $result = "{$currentIndent}{$key}: {$iter($val, $depth + 1)}";
         }, array_keys($currentValue), $currentValue);
@@ -42,24 +42,16 @@ function makeString(array $arr, string $nextIndent): string
 
     switch ($type) {
         case 'replace':
-            $result = "- {$key}: {$oldValue}" . PHP_EOL;
-            $result .= "{$nextIndent}+ {$key}: {$newValue}";
-            break;
+            return "- {$key}: {$oldValue}" . PHP_EOL . "{$nextIndent}+ {$key}: {$newValue}";
         case 'added':
-            $result = "+ {$key}: {$newValue}";
-            break;
+            return "+ {$key}: {$newValue}";
         case 'removed':
-            $result = "- {$key}: {$oldValue}";
-            break;
+            return  "- {$key}: {$oldValue}";
         case 'unchanged':
-            $result = "  {$key}: {$oldValue}";
-            break;
+            return "  {$key}: {$oldValue}";
         default:
-            print_r($type);
             throw new Error('Unknown order state: in \Formatters\Stylish\makeString => $type = {$type}!');
-            break;
     }
-    return $result;
 }
 
 function displayStylish(array $arr, int $depth = 1): string
