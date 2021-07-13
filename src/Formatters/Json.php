@@ -8,25 +8,34 @@ function makeString(array $arr): string
 {
     $key = $arr['key'];
     $type = $arr['type'];
-    $oldValue = $arr['oldValue'];
-    $newValue = $arr['newValue'];
-
-    if (is_object($oldValue)) {
-        $oldValue = get_object_vars($oldValue);
-        $oldValue = json_encode($oldValue);
-        is_string($newValue) ? $newValue = '"' . $newValue . '"' : '';
-    } elseif (is_object($newValue)) {
-        $newValue = get_object_vars($newValue);
-        $newValue = json_encode($newValue);
-        is_string($oldValue) ? $oldValue = '"' . $oldValue . '"' : '';
+    if (is_object($arr['oldValue'])) {
+        $oldValue = json_encode(get_object_vars($arr['oldValue']));
+        if (is_string($arr['newValue'])) {
+            $newValue = $newValue = '"' . $arr['newValue'] . '"';
+        }
+    } elseif (is_object($arr['newValue'])) {
+        $newValue = json_encode(get_object_vars($arr['newValue']));
+        if (is_string($arr['oldValue'])) {
+            $oldValue = '"' . $arr['oldValue'] . '"';
+        }
     } else {
-        is_string($oldValue) ? $oldValue = '"' . $oldValue . '"' : '';
-        is_string($newValue) ? $newValue = '"' . $newValue . '"' : '';
+        if (is_null($arr['oldValue'])) {
+            $oldValue = 'null';
+        } else {
+            $oldValue = trim(var_export($arr['oldValue'], true), "'");
+        }
+        if (is_null($arr['newValue'])) {
+            $newValue = 'null';
+        } else {
+            $newValue = trim(var_export($arr['newValue'], true), "'");
+        }
+        if (is_string($arr['oldValue'])) {
+            $oldValue = '"' . $arr['oldValue'] . '"';
+        }
+        if (is_string($arr['newValue'])) {
+            $newValue = $newValue = '"' . $arr['newValue'] . '"';
+        }
     }
-
-    $oldValue = is_null($oldValue) ? 'null' : trim(var_export($oldValue, true), "'");
-    $newValue = is_null($newValue) ? 'null' : trim(var_export($newValue, true), "'");
-
     switch ($type) {
         case 'replace':
             return '"oldValue":' . $oldValue . ',"newValue":' . $newValue;
@@ -37,10 +46,9 @@ function makeString(array $arr): string
         case 'unchanged':
             return '"value":' . $oldValue;
         default:
-            throw new Error('Unknown order state: in \Formatters\Json\makeString => $type = {$type}!');
+            return '';
     }
 }
-
 function iter(array $arr): string
 {
     $listForeReduce = array_keys($arr);
@@ -56,7 +64,6 @@ function iter(array $arr): string
     }, []);
     return implode(['[', ...$lines, ']']);
 }
-
 function displayJson(array $arr): string
 {
     return '{"type":"root","children":' . str_replace('}{', '},{', iter($arr)) . '}';
