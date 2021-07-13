@@ -9,11 +9,13 @@ function compareIter(object $beginObject, object $endObject): array
     $listForReduce = array_unique(array_merge($keysBeginObject, $keysEndObject));
 
     sort($listForReduce, SORT_STRING);
+    $begin = $beginObject;
+    $end = $endObject;
 
-    $ast = array_reduce($listForReduce, function ($acc, $key) use ($beginObject, $endObject) {
+    $ast = array_reduce($listForReduce, function ($acc, $key) use ($begin, $end) {
 
-        $oldValue = $beginObject->$key ?? null;
-        $newValue = $endObject->$key ?? null;
+        $oldValue = $begin->$key ?? null;
+        $newValue = $end->$key ?? null;
 
         if (is_object($oldValue) && is_object($newValue)) {
             $acc[] = [
@@ -23,7 +25,7 @@ function compareIter(object $beginObject, object $endObject): array
                 'newValue' => null,
                 'children' => compareIter($oldValue, $newValue)
             ];
-        } elseif (!property_exists($beginObject, $key)) {
+        } elseif (!property_exists($begin, $key)) {
             $acc[] = [
                 'key' => $key,
                 'type' => 'added',
@@ -31,7 +33,7 @@ function compareIter(object $beginObject, object $endObject): array
                 'newValue' => $newValue,
                 'children' => []
             ];
-        } elseif (!property_exists($endObject, $key)) {
+        } elseif (!property_exists($end, $key)) {
             $acc[] = [
                 'key' => $key,
                 'type' => 'removed',
