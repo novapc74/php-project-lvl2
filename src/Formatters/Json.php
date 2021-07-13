@@ -8,10 +8,11 @@ function makeString(array $arr): string
 {
     $key = $arr['key'];
     $type = $arr['type'];
+    $oldValue = $arr['oldValue'];
     if (is_object($arr['oldValue'])) {
         $oldValue = json_encode(get_object_vars($arr['oldValue']));
         if (is_string($arr['newValue'])) {
-            $newValue = $newValue = '"' . $arr['newValue'] . '"';
+            $newValue = '"' . $arr['newValue'] . '"';
         }
     } elseif (is_object($arr['newValue'])) {
         $newValue = json_encode(get_object_vars($arr['newValue']));
@@ -33,7 +34,7 @@ function makeString(array $arr): string
             $oldValue = '"' . $arr['oldValue'] . '"';
         }
         if (is_string($arr['newValue'])) {
-            $newValue = $newValue = '"' . $arr['newValue'] . '"';
+            $newValue = '"' . $arr['newValue'] . '"';
         }
     }
     switch ($type) {
