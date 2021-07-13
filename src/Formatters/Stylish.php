@@ -14,32 +14,46 @@ function stringify(array $value, int $spacesCount = 1): string
         $currentIndent = str_repeat(' ', $indentSize + 4);
         $bracketIndent = str_repeat(' ', $indentSize);
         $lines = array_map(function ($key, $val) use ($currentIndent, $iter, $depth): string {
-            is_object($val) ? $val = get_object_vars($val) : '';
-            return $result = "{$currentIndent}{$key}: {$iter($val, $depth + 1)}";
+            $item = $val;
+            if (is_object($val)) {
+                $item = get_object_vars($val);
+            }
+            return $result = "{$currentIndent}{$key}: {$iter($item, $depth + 1)}";
         }, array_keys($currentValue), $currentValue);
         return implode(PHP_EOL, ["{", ...$lines, "{$bracketIndent}}"]);
     };
     return $iter($value, $depth = 1);
 }
-
 function makeString(array $arr, string $nextIndent): string
 {
     $key = $arr['key'];
     $type = $arr['type'];
-    $oldValue = $arr['oldValue'];
-    $newValue = $arr['newValue'];
-
-    if (is_object($oldValue)) {
-        $oldValue = get_object_vars($oldValue);
-        $oldValue = stringify($oldValue, strlen($nextIndent) + 2);
-    } elseif (is_object($newValue)) {
-        $newValue = get_object_vars($newValue);
-        $newValue = stringify($newValue, strlen($nextIndent) + 2);
+    if (is_object($arr['oldValue'])) {
+        $oldValue = stringify(get_object_vars($arr['oldValue']), strlen($nextIndent) + 2);
+        if (is_null($arr['newValue'])) {
+            $newValue = 'null';
+        } else {
+            $newValue = trim(var_export($arr['newValue'], true), "'");
+        }
+    } elseif (is_object($arr['newValue'])) {
+        $newValue = stringify(get_object_vars($arr['newValue']), strlen($nextIndent) + 2);
+        if (is_null($arr['oldValue'])) {
+            $oldValue = 'null';
+        } else {
+            $oldValue = trim(var_export($arr['oldValue'], true), "'");
+        }
+    } else {
+        if (is_null($arr['newValue'])) {
+            $newValue = 'null';
+        } else {
+            $newValue = trim(var_export($arr['newValue'], true), "'");
+        }
+        if (is_null($arr['oldValue'])) {
+            $oldValue = 'null';
+        } else {
+            $oldValue = trim(var_export($arr['oldValue'], true), "'");
+        }
     }
-
-    $oldValue = is_null($oldValue) ? 'null' : trim(var_export($oldValue, true), "'");
-    $newValue = is_null($newValue) ? 'null' : trim(var_export($newValue, true), "'");
-
     switch ($type) {
         case 'replace':
             return "- {$key}: {$oldValue}" . PHP_EOL . "{$nextIndent}+ {$key}: {$newValue}";
@@ -50,10 +64,9 @@ function makeString(array $arr, string $nextIndent): string
         case 'unchanged':
             return "  {$key}: {$oldValue}";
         default:
-            throw new Error('Unknown order state: in \Formatters\Stylish\makeString => $type = {$type}!');
+            return '';
     }
 }
-
 function displayStylish(array $arr, int $depth = 1): string
 {
     $indentSize = $depth * 4;

@@ -45,8 +45,7 @@ function makeString(array $arr, string $node = null): string
         case 'replace':
             return "Property '{$delimiter}{$key}' was updated. From {$oldValue} to {$newValue}";
         default:
-            return null;
-            // throw new Error('Unknown order state: in \Formatters\Plain\makeString => $type = {$type}!');
+            return 'error in type';
     }
 }
 function displayPlain(array $arr, string $node = null): string
