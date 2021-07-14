@@ -6,12 +6,14 @@ function compareIter(object $beginObject, object $endObject): array
 {
     $keysBeginObject = array_keys(get_object_vars($beginObject));
     $keysEndObject = array_keys(get_object_vars($endObject));
-    $listForReduce = array_unique(array_merge($keysBeginObject, $keysEndObject));
-    sort($listForReduce, SORT_STRING);
+    $listForMap = array_unique(array_merge($keysBeginObject, $keysEndObject));
+
+    sort($listForMap);
+    // natcasesort($listForMap);
+
     $ast = array_map(function ($key) use ($beginObject, $endObject): array {
         $oldValue = $beginObject->$key ?? null;
         $newValue = $endObject->$key ?? null;
-
         if (is_object($oldValue) && is_object($newValue)) {
                 $type = 'nested';
                 $children = compareIter($oldValue, $newValue);
@@ -31,6 +33,6 @@ function compareIter(object $beginObject, object $endObject): array
             'newValue' => $newValue,
             'children' => $children ?? []
         ];
-    }, $listForReduce);
+    }, $listForMap);
     return $ast;
 }

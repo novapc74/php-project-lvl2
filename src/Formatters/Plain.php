@@ -51,18 +51,18 @@ function makeString(array $arr, string $node = null): string
 
 function displayPlain(array $arr, string $node = null): string
 {
-    $listForReduce = array_keys($arr);
-    $lines = array_reduce($listForReduce, function ($acc, $item) use ($arr, $node) {
+    $listForMap = array_keys($arr);
+    $lines = array_map(function ($item) use ($arr, $node) {
         if ($arr[$item]['type'] === 'nested' && !isset($node)) {
             $node = $arr[$item]['key'];
-            $acc[] = displayPlain($arr[$item]['children'], $node);
+            return displayPlain($arr[$item]['children'], $node);
         } elseif ($arr[$item]['type'] === 'nested') {
             $node .= '.' . $arr[$item]['key'];
-            $acc[] = displayPlain($arr[$item]['children'], $node);
+            return displayPlain($arr[$item]['children'], $node);
         } elseif ($arr[$item]['type'] !== 'unchanged') {
-            $acc[] = makeString($arr[$item], $node);
+            return makeString($arr[$item], $node);
         }
-        return $acc;
-    }, []);
-    return implode(PHP_EOL, [...$lines]);
+    }, $listForMap);
+    $filterData = array_filter($lines, fn ($item): bool => $item !== null);
+    return implode(PHP_EOL, [...$filterData]);
 }
