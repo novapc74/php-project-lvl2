@@ -8,16 +8,16 @@ function makeString(array $arr): string
 {
     $str = Yaml::dump($arr);
     $strToArr = explode(PHP_EOL, $str);
-    $filterData = array_filter($strToArr, fn ($item) => $item !== 'children: {  }' && !empty($item));
+    $filterData = array_filter($strToArr, fn ($item) => $item !== 'children: {  }' && $item);
     $dataForOutput = array_map(fn ($item) => explode(': ', $item), $filterData);
-    $outputArr = array_map(function ($item) {
+    $outputArr = array_map(function ($item): string {
         $test = '"' . $item[0] . '": ';
         $test2 = str_replace("'", '', $item[1]);
         if ($test2 == 'false' || $test2 == 'true' || $test2 == 'null' || ctype_digit($test2)) {
             return "{$test}{$test2}";
         } else {
-            $test2 = '"' . str_replace("'", '', $item[1]) . '"';
-            return "{$test}{$test2}";
+            $test3 = '"' . str_replace("'", '', $item[1]) . '"';
+            return "{$test}{$test3}";
         }
     }, $dataForOutput);
 
@@ -35,7 +35,7 @@ function makeString(array $arr): string
 function iter(array $arr): string
 {
     $listForMap = array_keys($arr);
-    $lines = array_map(function ($item) use ($arr) {
+    $lines = array_map(function ($item) use ($arr): string {
         if ($arr[$item]['type'] === 'nested') {
             return '{"key":"' . $arr[$item]['key'] . '","type":"' .
                 $arr[$item]['type'] . '","children":' . iter($arr[$item]['children']) . '}';
