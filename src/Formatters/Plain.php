@@ -57,12 +57,12 @@ function displayPlain(array $arr, string $node = null): string
             $node = $arr[$item]['key'];
             return displayPlain($arr[$item]['children'], $node);
         } elseif ($arr[$item]['type'] === 'nested') {
-            $node .= '.' . $arr[$item]['key'];
-            return displayPlain($arr[$item]['children'], $node);
+            $node1 = $node . '.' . $arr[$item]['key'];
+            return displayPlain($arr[$item]['children'], $node1);
         } elseif ($arr[$item]['type'] !== 'unchanged') {
             return makeString($arr[$item], $node);
         }
     }, $listForMap);
-    $filterData = array_filter($lines, fn ($item): bool => $item !== null);
+    $filterData = array_filter($lines, fn ($item): string => $item !== null);
     return implode(PHP_EOL, [...$filterData]);
 }
