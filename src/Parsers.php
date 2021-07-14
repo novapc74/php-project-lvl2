@@ -4,7 +4,7 @@ namespace Differ\Parsers;
 
 use Symfony\Component\Yaml\Yaml;
 
-function parserFile(string $path, string $typeFile): object
+function parserFile(string $path): object
 {
-    return Yaml::parse(file_get_contents($path), Yaml::PARSE_OBJECT_FOR_MAP);
+    return Yaml::parseFile($path, Yaml::PARSE_OBJECT_FOR_MAP);
 }

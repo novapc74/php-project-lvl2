@@ -41,7 +41,7 @@ class JsonTest extends TestCase
     }
     public function testMakeString()
     {
-        $structureAdd = '"value":"test"';
+        $structureAdd = '"key": "common","type": "added","oldValue": "","newValue": "test"';
         $arrAdd = [
             'key' => 'common',
             'type' => 'added',
@@ -50,7 +50,7 @@ class JsonTest extends TestCase
             'children' => [
             ]];
         $this->assertEquals($structureAdd, makeString($arrAdd));
-        $structureRemoved = '"value":""';
+        $structureRemoved = '"key": "common","type": "removed","oldValue": "","newValue": "test"';
         $arrRemoved = [
             'key' => 'common',
             'type' => 'removed',

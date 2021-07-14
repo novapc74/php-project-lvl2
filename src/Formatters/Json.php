@@ -6,65 +6,46 @@ use Symfony\Component\Yaml\Yaml;
 
 function makeString(array $arr): string
 {
-    $key = $arr['key'];
-    $type = $arr['type'];
-    $oldValue = $arr['oldValue'];
-    if (is_object($arr['oldValue'])) {
-        $oldValue = json_encode(get_object_vars($arr['oldValue']));
-        if (is_string($arr['newValue'])) {
-            $newValue = '"' . $arr['newValue'] . '"';
-        }
-    } elseif (is_object($arr['newValue'])) {
-        $newValue = json_encode(get_object_vars($arr['newValue']));
-        if (is_string($arr['oldValue'])) {
-            $oldValue = '"' . $arr['oldValue'] . '"';
-        }
-    } else {
-        if (is_null($arr['oldValue'])) {
-            $oldValue = 'null';
+    $str = Yaml::dump($arr);
+    $strToArr = explode(PHP_EOL, $str);
+    $filterData = array_filter($strToArr, fn ($item) => $item !== 'children: {  }' && !empty($item));
+    $dataForOutput = array_map(fn ($item) => explode(': ', $item), $filterData);
+    $outputArr = array_map(function ($item) {
+        $test = '"' . $item[0] . '": ';
+        $test2 = str_replace("'", '', $item[1]);
+        if ($test2 == 'false' || $test2 == 'true' || $test2 == 'null' || ctype_digit($test2)) {
+            return "{$test}{$test2}";
         } else {
-            $oldValue = trim(var_export($arr['oldValue'], true), "'");
+            $test2 = '"' . str_replace("'", '', $item[1]) . '"';
+            return "{$test}{$test2}";
         }
-        if (is_null($arr['newValue'])) {
-            $newValue = 'null';
-        } else {
-            $newValue = trim(var_export($arr['newValue'], true), "'");
-        }
-        if (is_string($arr['oldValue'])) {
-            $oldValue = '"' . $arr['oldValue'] . '"';
-        }
-        if (is_string($arr['newValue'])) {
-            $newValue = '"' . $arr['newValue'] . '"';
-        }
-    }
-    switch ($type) {
-        case 'replace':
-            return '"oldValue":' . $oldValue . ',"newValue":' . $newValue;
-        case 'added':
-            return '"value":' . $newValue;
-        case 'removed':
-            return '"value":' . $oldValue;
-        case 'unchanged':
-            return '"value":' . $oldValue;
-        default:
-            return '';
-    }
+    }, $dataForOutput);
+
+    // if (is_object($arr['oldValue'])) {
+    //     $oldValue = Yaml::dump($arr['oldValue'], 1, 1, Yaml::DUMP_OBJECT_AS_MAP);
+    //     $oldValue = Yaml::parse($oldValue);
+    // }
+    // if (is_object($arr['newValue'])) {
+    //     $newValue = Yaml::dump($arr['newValue'], 1, 1, Yaml::DUMP_OBJECT_AS_MAP);
+    //     $newValue = Yaml::parse($newValue);
+    // }
+    return "{$outputArr[0]},{$outputArr[1]},{$outputArr[2]},{$outputArr[3]}";
 }
+
 function iter(array $arr): string
 {
-    $listForeReduce = array_keys($arr);
-    $lines = array_reduce($listForeReduce, function ($acc, $item) use ($arr) {
+    $listForMap = array_keys($arr);
+    $lines = array_map(function ($item) use ($arr) {
         if ($arr[$item]['type'] === 'nested') {
-            $acc[] = '{"key":"' . $arr[$item]['key'] . '","type":"' .
+            return '{"key":"' . $arr[$item]['key'] . '","type":"' .
                 $arr[$item]['type'] . '","children":' . iter($arr[$item]['children']) . '}';
         } else {
-            $acc[] = '{"key":"' . $arr[$item]['key'] . '","type":"' .
-                $arr[$item]['type'] . '",' . makeString($arr[$item]) . '}';
+            return '{' . makeString($arr[$item]) . '}';
         }
-        return $acc;
-    }, []);
-    return implode(['[', ...$lines, ']']);
+    }, $listForMap);
+    return implode('', ["[", ...$lines, "]"]);
 }
+
 function displayJson(array $arr): string
 {
     return '{"type":"root","children":' . str_replace('}{', '},{', iter($arr)) . '}';

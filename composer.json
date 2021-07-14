@@ -33,8 +33,7 @@
         "src/Formatters/Stylish.php",
         "src/Formatters/Plain.php",
         "src/Formatters/Json.php",
-        "src/Ast.php",
-        "src/Extension.php"
+        "src/Ast.php"
          ]
     },
     "scripts": {
