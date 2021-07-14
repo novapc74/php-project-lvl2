@@ -6,7 +6,7 @@ use Symfony\Component\Yaml\Yaml;
 
 function stringify(array $value, int $spacesCount = 1): string
 {
-    $iter = function ($currentValue, $depth) use (&$iter, $spacesCount) {
+    $iter = function ($currentValue, $depth) use (&$iter, $spacesCount): string {
         if (!is_array($currentValue)) {
             return $currentValue;
         }
@@ -14,9 +14,10 @@ function stringify(array $value, int $spacesCount = 1): string
         $currentIndent = str_repeat(' ', $indentSize + 4);
         $bracketIndent = str_repeat(' ', $indentSize);
         $lines = array_map(function ($key, $val) use ($currentIndent, $iter, $depth): string {
-            $item = $val;
             if (is_object($val)) {
                 $item = get_object_vars($val);
+            } else {
+                $item = $val;
             }
             return $result = "{$currentIndent}{$key}: {$iter($item, $depth + 1)}";
         }, array_keys($currentValue), $currentValue);
@@ -74,16 +75,15 @@ function displayStylish(array $arr, int $depth = 1): string
     $nextIndent = str_repeat(' ', $indentSize - 2);
     $bracketIndent = str_repeat(' ', $indentSize - 4);
 
-    $listForReduce = array_keys($arr);
-    $lines = array_reduce($listForReduce, function ($acc, $item) use ($arr, $currentIndent, $nextIndent, $depth) {
+    $listForMap = array_keys($arr);
+    $lines = array_map(function ($item) use ($arr, $currentIndent, $nextIndent, $depth): string {
         $key = $arr[$item]['key'];
         $value = displayStylish($arr[$item]['children'], $depth + 1);
         if ($arr[$item]['type'] === 'nested') {
-            $acc[] = "{$currentIndent}{$key}: {$value}";
+            return "{$currentIndent}{$key}: {$value}";
         } else {
-            $acc[] = $nextIndent . makeString($arr[$item], $nextIndent);
+            return $nextIndent . makeString($arr[$item], $nextIndent);
         }
-        return $acc;
-    }, []);
+    }, $listForMap);
     return implode(PHP_EOL, ['{', ...$lines, "{$bracketIndent}}"]);
 }

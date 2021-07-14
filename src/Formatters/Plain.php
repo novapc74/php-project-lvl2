@@ -9,7 +9,7 @@ function makeString(array $arr, string $node = null): string
     if (isset($node)) {
         $delimiter = $node . '.';
     } else {
-        $delimiter = null;
+        $delimiter = '';
     }
     if (is_object($arr['oldValue'])) {
         $oldValue = '[complex value]';
@@ -48,6 +48,9 @@ function makeString(array $arr, string $node = null): string
             return 'error in type';
     }
 }
+
+
+
 function displayPlain(array $arr, string $node = null): string
 {
     $listForReduce = array_keys($arr);
