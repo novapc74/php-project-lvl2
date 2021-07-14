@@ -8,7 +8,7 @@ function makeString(array $arr): string
 {
     $str = Yaml::dump($arr);
     $strToArr = explode(PHP_EOL, $str);
-    $filterData = array_filter($strToArr, fn ($item) => $item !== 'children: {  }' & $item !== '');
+    $filterData = array_filter($strToArr, fn ($item): int => $item !== 'children: {  }' & $item !== '');
     $dataForOutput = array_map(fn ($item) => explode(': ', $item), $filterData);
     $outputArr = array_map(function ($item): string {
         $test = '"' . $item[0] . '": ';
