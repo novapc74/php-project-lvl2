@@ -49,8 +49,6 @@ function makeString(array $arr, string $node = null): string
     }
 }
 
-
-
 function displayPlain(array $arr, string $node = null): string
 {
     $listForReduce = array_keys($arr);
