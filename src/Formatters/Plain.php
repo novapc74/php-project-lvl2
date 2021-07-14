@@ -52,17 +52,18 @@ function makeString(array $arr, string $node = null): string
 function displayPlain(array $arr, string $node = null): string
 {
     $listForMap = array_keys($arr);
-    $lines = array_map(function ($item) use ($arr, $node) {
+    $lines = array_map(function ($item) use ($arr, $node): string {
         if ($arr[$item]['type'] === 'nested' && !isset($node)) {
-            $node = $arr[$item]['key'];
-            return displayPlain($arr[$item]['children'], $node);
-        } elseif ($arr[$item]['type'] === 'nested') {
-            $node1 = $node . '.' . $arr[$item]['key'];
+            $node1 = $arr[$item]['key'];
             return displayPlain($arr[$item]['children'], $node1);
+        } elseif ($arr[$item]['type'] === 'nested') {
+            $node2 = $node . '.' . $arr[$item]['key'];
+            return displayPlain($arr[$item]['children'], $node2);
         } elseif ($arr[$item]['type'] !== 'unchanged') {
             return makeString($arr[$item], $node);
         }
+        return '';
     }, $listForMap);
-    $filterData = array_filter($lines, fn ($item): string => $item !== null);
+    $filterData = array_filter($lines, fn ($item): bool => $item !== '');
     return implode(PHP_EOL, [...$filterData]);
 }
