@@ -12,7 +12,8 @@
     "require": {
         "wp-cli/wp-cli": "^2.4",
         "docopt/docopt": "^1.0",
-        "symfony/yaml": "^5.2"
+        "symfony/yaml": "^5.2",
+        "tightenco/collect": "^8.34"
     },
 
     "require-dev": {

@@ -7,9 +7,9 @@ function compareIter(object $beginObject, object $endObject): array
     $keysBeginObject = array_keys(get_object_vars($beginObject));
     $keysEndObject = array_keys(get_object_vars($endObject));
     $listForMap = array_unique(array_merge($keysBeginObject, $keysEndObject));
-
-    natcasesort($listForMap);
-
+    $collection = collect($listForMap);
+    $sortKey = $collection->sort();
+    $key = $sortKey->values()->all();
     $ast = array_map(function (string $key) use ($beginObject, $endObject): array {
         $oldValue = $beginObject->$key ?? null;
         $newValue = $endObject->$key ?? null;
@@ -32,6 +32,6 @@ function compareIter(object $beginObject, object $endObject): array
             'newValue' => $newValue,
             'children' => $children ?? []
         ];
-    }, $listForMap);
+    }, $key);
     return $ast;
 }
