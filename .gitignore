@@ -5,4 +5,4 @@ logs
 *.swp
 *.cache
 /build
-/coverage
+coverage/
