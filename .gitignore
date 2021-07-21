@@ -1,8 +1,8 @@
 /vendor/
+/coverage/
 .idea
 logs
 *.swo
 *.swp
 *.cache
 /build
-coverage/
