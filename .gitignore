@@ -4,6 +4,5 @@ logs
 *.swo
 *.swp
 *.cache
-build
-/work/
-/coverage/
+/build
+/coverage
