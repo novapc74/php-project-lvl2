@@ -6,7 +6,7 @@ use function Differ\Formatters\Stylish\displayStylish;
 use function Differ\Formatters\Plain\displayPlain;
 use function Differ\Formatters\Json\displayJson;
 use function Differ\Parsers\parserFile;
-use function Differ\Ast\compareIter;
+use function Differ\AstFotmatter\compareIter;
 
 function getDiff(array $ast, string $style): string
 {

@@ -1,24 +1,24 @@
 <?php
 
-namespace Differ\Ast;
+namespace Differ\AstFotmatter;
 
-function compareIter(object $beginObject, object $endObject): array
+function compareIter(object $firstObject, object $secondObject): array
 {
-    $keysBeginObject = array_keys(get_object_vars($beginObject));
-    $keysEndObject = array_keys(get_object_vars($endObject));
+    $keysBeginObject = array_keys(get_object_vars($firstObject));
+    $keysEndObject = array_keys(get_object_vars($secondObject));
     $listForMap = array_unique(array_merge($keysBeginObject, $keysEndObject));
     $collection = collect($listForMap);
     $sortKey = $collection->sort();
     $key = $sortKey->values()->all();
-    $ast = array_map(function (string $key) use ($beginObject, $endObject): array {
-        $oldValue = $beginObject->$key ?? null;
-        $newValue = $endObject->$key ?? null;
+    $ast = array_map(function (string $key) use ($firstObject, $secondObject): array {
+        $oldValue = $firstObject->$key ?? null;
+        $newValue = $secondObject->$key ?? null;
         if (is_object($oldValue) && is_object($newValue)) {
                 $type = 'nested';
                 $children = compareIter($oldValue, $newValue);
-        } elseif (!property_exists($beginObject, $key)) {
+        } elseif (!property_exists($firstObject, $key)) {
                 $type = 'added';
-        } elseif (!property_exists($endObject, $key)) {
+        } elseif (!property_exists($secondObject, $key)) {
                 $type = 'removed';
         } elseif ($oldValue === $newValue) {
                 $type = 'unchanged';
