@@ -1,6 +1,6 @@
 <?php
 
-namespace Differ\AstFotmatter;
+namespace Differ\AstFormatter;
 
 function compareIter(object $firstObject, object $secondObject): array
 {

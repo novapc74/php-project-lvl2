@@ -2,27 +2,22 @@
 
 namespace Differ\Differ;
 
-use function Differ\Formatters\Stylish\displayStylish;
-use function Differ\Formatters\Plain\displayPlain;
-use function Differ\Formatters\Json\displayJson;
 use function Differ\Parsers\parserFile;
-use function Differ\AstFotmatter\compareIter;
+use function Differ\AstFormatter\compareIter;
+use function Differ\Formatter\chooseFormat;
 
-function getDiff(array $ast, string $style): string
+function genDiff(string $firstFilePath, string $secondFilePath, string $styleString = 'stylish'): string
 {
-    switch ($style) {
-        case 'json':
-            return displayJson($ast);
-        case 'plain':
-            return displayPlain($ast);
-        default:
-            return displayStylish($ast);
-    }
-}
-function genDiff(string $beginFilePath, string $endFilePath, string $styleOutput = ''): string
-{
-    $object1 = parserFile($beginFilePath);
-    $object2 = parserFile($endFilePath);
-    $ast = compareIter($object1, $object2);
-    return getDiff($ast, $styleOutput);
+
+    $firstFileContent = file_get_contents($firstFilePath);
+    $extensionFirstFile = pathinfo($firstFilePath, PATHINFO_EXTENSION);
+
+    $secondFileContent = file_get_contents($secondFilePath);
+    $extensionSecondFile = pathinfo($secondFilePath, PATHINFO_EXTENSION);
+
+    $firstObject = parserFile($firstFileContent, $extensionFirstFile);
+    $secondObject = parserFile($secondFileContent, $extensionSecondFile);
+
+    $astFormat = compareIter($firstObject, $secondObject);
+    return chooseFormat($astFormat, $styleString);
 }

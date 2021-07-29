@@ -2,8 +2,6 @@
 
 namespace Differ\Formatters\Stylish;
 
-use Symfony\Component\Yaml\Yaml;
-
 function stringify(array $value, int $spacesCount = 1): string
 {
     $iter = function ($currentValue, $depth) use (&$iter, $spacesCount): string {
@@ -13,46 +11,47 @@ function stringify(array $value, int $spacesCount = 1): string
         $indentSize = $depth * $spacesCount;
         $currentIndent = str_repeat(' ', $indentSize + 4);
         $bracketIndent = str_repeat(' ', $indentSize);
-        $lines = array_map(function ($key, $val) use ($currentIndent, $iter, $depth): string {
-            if (is_object($val)) {
-                $item = get_object_vars($val);
+        $lines = array_map(function ($key, $item) use ($currentIndent, $iter, $depth): string {
+            if (is_object($item)) {
+                $line = get_object_vars($item);
             } else {
-                $item = $val;
+                $line = $item;
             }
-            return $result = "{$currentIndent}{$key}: {$iter($item, $depth + 1)}";
+            return "{$currentIndent}{$key}: {$iter($line, $depth + 1)}";
         }, array_keys($currentValue), $currentValue);
         return implode(PHP_EOL, ["{", ...$lines, "{$bracketIndent}}"]);
     };
     return $iter($value, $depth = 1);
 }
-function makeString(array $arr, string $nextIndent): string
+
+function render(array $astFormat, string $nextIndent): string
 {
-    $key = $arr['key'];
-    $type = $arr['type'];
-    if (is_object($arr['oldValue'])) {
-        $oldValue = stringify(get_object_vars($arr['oldValue']), strlen($nextIndent) + 2);
-        if (is_null($arr['newValue'])) {
+    $key = $astFormat['key'];
+    $type = $astFormat['type'];
+    if (is_object($astFormat['oldValue'])) {
+        $oldValue = stringify(get_object_vars($astFormat['oldValue']), strlen($nextIndent) + 2);
+        if (is_null($astFormat['newValue'])) {
             $newValue = 'null';
         } else {
-            $newValue = trim(var_export($arr['newValue'], true), "'");
+            $newValue = trim(var_export($astFormat['newValue'], true), "'");
         }
-    } elseif (is_object($arr['newValue'])) {
-        $newValue = stringify(get_object_vars($arr['newValue']), strlen($nextIndent) + 2);
-        if (is_null($arr['oldValue'])) {
+    } elseif (is_object($astFormat['newValue'])) {
+        $newValue = stringify(get_object_vars($astFormat['newValue']), strlen($nextIndent) + 2);
+        if (is_null($astFormat['oldValue'])) {
             $oldValue = 'null';
         } else {
-            $oldValue = trim(var_export($arr['oldValue'], true), "'");
+            $oldValue = trim(var_export($astFormat['oldValue'], true), "'");
         }
     } else {
-        if (is_null($arr['newValue'])) {
+        if (is_null($astFormat['newValue'])) {
             $newValue = 'null';
         } else {
-            $newValue = trim(var_export($arr['newValue'], true), "'");
+            $newValue = trim(var_export($astFormat['newValue'], true), "'");
         }
-        if (is_null($arr['oldValue'])) {
+        if (is_null($astFormat['oldValue'])) {
             $oldValue = 'null';
         } else {
-            $oldValue = trim(var_export($arr['oldValue'], true), "'");
+            $oldValue = trim(var_export($astFormat['oldValue'], true), "'");
         }
     }
     switch ($type) {
@@ -65,24 +64,24 @@ function makeString(array $arr, string $nextIndent): string
         case 'unchanged':
             return "  {$key}: {$oldValue}";
         default:
-            return '';
+            throw new Exception("src\Differ\Formatters\Stylish Unknown property", 1);
     }
 }
-function displayStylish(array $arr, int $depth = 1): string
+function displayStylish(array $astFormat, int $depth = 1): string
 {
     $indentSize = $depth * 4;
     $currentIndent = str_repeat(' ', $indentSize);
     $nextIndent = str_repeat(' ', $indentSize - 2);
     $bracketIndent = str_repeat(' ', $indentSize - 4);
 
-    $listForMap = array_keys($arr);
-    $lines = array_map(function ($item) use ($arr, $currentIndent, $nextIndent, $depth): string {
-        $key = $arr[$item]['key'];
-        $value = displayStylish($arr[$item]['children'], $depth + 1);
-        if ($arr[$item]['type'] === 'nested') {
+    $listForMap = array_keys($astFormat);
+    $lines = array_map(function ($item) use ($astFormat, $currentIndent, $nextIndent, $depth): string {
+        $key = $astFormat[$item]['key'];
+        $value = displayStylish($astFormat[$item]['children'], $depth + 1);
+        if ($astFormat[$item]['type'] === 'nested') {
             return "{$currentIndent}{$key}: {$value}";
         } else {
-            return $nextIndent . makeString($arr[$item], $nextIndent);
+            return $nextIndent . render($astFormat[$item], $nextIndent);
         }
     }, $listForMap);
     return implode(PHP_EOL, ['{', ...$lines, "{$bracketIndent}}"]);

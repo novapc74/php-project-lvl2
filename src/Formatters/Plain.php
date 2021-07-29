@@ -2,39 +2,39 @@
 
 namespace Differ\Formatters\Plain;
 
-function makeString(array $arr, string $node = null): string
+function render(array $astFormat, string $node = null): string
 {
-    $key = $arr['key'];
-    $type = $arr['type'];
+    $key = $astFormat['key'];
+    $type = $astFormat['type'];
     if (isset($node)) {
         $delimiter = $node . '.';
     } else {
         $delimiter = '';
     }
-    if (is_object($arr['oldValue'])) {
+    if (is_object($astFormat['oldValue'])) {
         $oldValue = '[complex value]';
-        if (is_null($arr['newValue'])) {
+        if (is_null($astFormat['newValue'])) {
             $newValue = 'null';
         } else {
-            $newValue = trim(var_export($arr['newValue'], true), '"');
+            $newValue = trim(var_export($astFormat['newValue'], true), '"');
         }
-    } elseif (is_object($arr['newValue'])) {
+    } elseif (is_object($astFormat['newValue'])) {
         $newValue = '[complex value]';
-        if (is_null($arr['oldValue'])) {
+        if (is_null($astFormat['oldValue'])) {
             $oldValue = 'null';
         } else {
-            $oldValue = trim(var_export($arr['oldValue'], true), '"');
+            $oldValue = trim(var_export($astFormat['oldValue'], true), '"');
         }
     } else {
-        if (is_null($arr['oldValue'])) {
+        if (is_null($astFormat['oldValue'])) {
             $oldValue = 'null';
         } else {
-            $oldValue = trim(var_export($arr['oldValue'], true), '"');
+            $oldValue = trim(var_export($astFormat['oldValue'], true), '"');
         }
-        if (is_null($arr['newValue'])) {
+        if (is_null($astFormat['newValue'])) {
             $newValue = 'null';
         } else {
-            $newValue = trim(var_export($arr['newValue'], true), '"');
+            $newValue = trim(var_export($astFormat['newValue'], true), '"');
         }
     }
     switch ($type) {
@@ -45,22 +45,24 @@ function makeString(array $arr, string $node = null): string
         case 'replace':
             return "Property '{$delimiter}{$key}' was updated. From {$oldValue} to {$newValue}";
         default:
-            return 'error in type';
+            throw new Exception("src\Differ\Formatters\Plain Unknown property", 1);
     }
 }
 
-function displayPlain(array $arr, string $node = null): string
+function displayPlain(array $astFormat, string $node = null): string
 {
-    $listForMap = array_keys($arr);
-    $lines = array_map(function ($item) use ($arr, $node): string {
-        if ($arr[$item]['type'] === 'nested' && !isset($node)) {
-            $node1 = $arr[$item]['key'];
-            return displayPlain($arr[$item]['children'], $node1);
-        } elseif ($arr[$item]['type'] === 'nested') {
-            $node2 = $node . '.' . $arr[$item]['key'];
-            return displayPlain($arr[$item]['children'], $node2);
-        } elseif ($arr[$item]['type'] !== 'unchanged') {
-            return makeString($arr[$item], $node);
+    $listForMap = array_keys($astFormat);
+    $lines = array_map(function ($item) use ($astFormat, $node): string {
+        if ($astFormat[$item]['type'] === 'nested' && !isset($node)) {
+            $node1 = $astFormat[$item]['key'];
+            return displayPlain($astFormat[$item]['children'], $node1);
+        }
+        if ($astFormat[$item]['type'] === 'nested') {
+            $node2 = $node . '.' . $astFormat[$item]['key'];
+            return displayPlain($astFormat[$item]['children'], $node2);
+        }
+        if ($astFormat[$item]['type'] !== 'unchanged') {
+            return render($astFormat[$item], $node);
         }
         return '';
     }, $listForMap);

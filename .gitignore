@@ -5,4 +5,7 @@ logs
 *.swo
 *.swp
 *.cache
-/build
+*.xml
+/build/
+.phpunit.result.cache
+.codeclimate
