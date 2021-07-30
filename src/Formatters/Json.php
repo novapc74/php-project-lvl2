@@ -4,7 +4,7 @@ namespace Differ\Formatters\Json;
 
 function render(array $tree): string
 {
-    return json_encode($tree, JSON_THROW_ON_ERROR);
+    return json_encode($tree);
 }
 
 function iter(array $astFormat): string
@@ -15,7 +15,7 @@ function iter(array $astFormat): string
             return '{"key":"' . $astFormat[$item]['key'] . '","type":"' .
                 $astFormat[$item]['type'] . '","children":' . iter($astFormat[$item]['children']) . '}';
         } else {
-            return '{' . render($astFormat[$item]) . '}';
+            return render($astFormat[$item]);
         }
     }, $listForMap);
     return implode('', ["[", ...$lines, "]"]);
