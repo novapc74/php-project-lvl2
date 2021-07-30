@@ -19,9 +19,8 @@ function genDiff(string $firstFilePath, string $secondFilePath, string $styleStr
         $firstObject = parserFile($firstFileContent, $extensionFirstFile);
         $secondObject = parserFile($secondFileContent, $extensionSecondFile);
         $astFormat = compareIter($firstObject, $secondObject);
+        return chooseFormat($astFormat, $styleString);
     } catch (\Exception $e) {
         echo 'An exception thrown: ',  $e->getMessage(), PHP_EOL;
     }
-
-    return chooseFormat($astFormat, $styleString);
 }
