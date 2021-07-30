@@ -8,14 +8,11 @@ use function Differ\Formatters\Json\displayJson;
 
 function chooseFormat(array $ast, string $style): string
 {
-    switch ($style) {
-        case 'json':
-            return displayJson($ast);
-        case 'plain':
-            return displayPlain($ast);
-        case 'stylish':
-            return displayStylish($ast);
-        default:
-            throw new \Exception("src\Differ\Formatter Can`t find format", 1);
+    if ($style == 'json') {
+        return displayJson($ast);
     }
+    if ($style == 'plain') {
+        return displayPlain($ast);
+    }
+    return displayStylish($ast);
 }
