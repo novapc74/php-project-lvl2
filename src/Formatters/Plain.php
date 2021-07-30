@@ -2,6 +2,8 @@
 
 namespace Differ\Formatters\Plain;
 
+use Differ\Exeption;
+
 function render(array $astFormat, string $node = null): string
 {
     $key = $astFormat['key'];
@@ -45,7 +47,7 @@ function render(array $astFormat, string $node = null): string
         case 'replace':
             return "Property '{$delimiter}{$key}' was updated. From {$oldValue} to {$newValue}";
         default:
-            throw new Exception("src\Differ\Formatters\Plain Unknown property", 1);
+            throw new Exception("src\Differ\Formatters\Plain Unknown property");
     }
 }
 

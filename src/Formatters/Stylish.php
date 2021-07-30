@@ -2,6 +2,8 @@
 
 namespace Differ\Formatters\Stylish;
 
+use Differ\Exeption;
+
 function stringify(array $value, int $spacesCount = 1): string
 {
     $iter = function ($currentValue, $depth) use (&$iter, $spacesCount): string {
@@ -64,7 +66,7 @@ function render(array $astFormat, string $nextIndent): string
         case 'unchanged':
             return "  {$key}: {$oldValue}";
         default:
-            throw new Exception("src\Differ\Formatters\Stylish Unknown property", 1);
+            throw new Exception("src\Differ\Formatters\Stylish Unknown property");
     }
 }
 function displayStylish(array $astFormat, int $depth = 1): string

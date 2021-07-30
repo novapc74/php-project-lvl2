@@ -2,6 +2,7 @@
 
 namespace Differ\Parsers;
 
+use Differ\Exeption;
 use Symfony\Component\Yaml\Yaml;
 
 function parserFile(string $string, string $extension = 'yaml'): object
@@ -14,6 +15,6 @@ function parserFile(string $string, string $extension = 'yaml'): object
         case 'yml':
             return Yaml::parse($string, Yaml::PARSE_OBJECT_FOR_MAP);
         default:
-            throw new Exception("src\Differ\Parsers non-parsed file extension", 1);
+            throw new Exception("src\Differ\Parsers non-parsed file extension");
     }
 }
