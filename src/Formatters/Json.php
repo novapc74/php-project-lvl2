@@ -5,7 +5,7 @@ namespace Differ\Formatters\Json;
 function render(array $tree): string
 {
     $string = str_replace(',"children":[]', '', json_encode($tree, JSON_THROW_ON_ERROR));
-    return (string)($string);
+    return $string;
 }
 
 function iter(array $astFormat): string

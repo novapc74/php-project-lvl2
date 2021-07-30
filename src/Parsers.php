@@ -2,7 +2,7 @@
 
 namespace Differ\Parsers;
 
-use Differ\Exeption;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\Yaml\Yaml;
 
 function parserFile(string $string, string $extension = 'yaml'): object

@@ -2,7 +2,7 @@
 
 namespace Differ\Formatters\Stylish;
 
-use Differ\Exeption;
+use PHPUnit\Framework\TestCase;
 
 function stringify(array $value, int $spacesCount = 1): string
 {

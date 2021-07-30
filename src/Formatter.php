@@ -2,6 +2,8 @@
 
 namespace Differ\Formatter;
 
+use PHPUnit\Framework\TestCase;
+
 use function Differ\Formatters\Stylish\displayStylish;
 use function Differ\Formatters\Plain\displayPlain;
 use function Differ\Formatters\Json\displayJson;

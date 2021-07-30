@@ -2,7 +2,7 @@
 
 namespace Differ\Formatters\Plain;
 
-use Differ\Exeption;
+use PHPUnit\Framework\TestCase;
 
 function render(array $astFormat, string $node = null): string
 {

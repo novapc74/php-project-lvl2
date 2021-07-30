@@ -2,7 +2,7 @@
 
 namespace Differ\Differ;
 
-use Differ\Exeption;
+use PHPUnit\Framework\TestCase;
 
 use function Differ\Parsers\parserFile;
 use function Differ\AstFormatter\compareIter;
@@ -18,8 +18,8 @@ function genDiff(string $firstFilePath, string $secondFilePath, string $styleStr
     $extensionSecondFile = pathinfo($secondFilePath, PATHINFO_EXTENSION);
 
     try {
-        $firstObject = parserFile((string)($firstFileContent), (string)($extensionFirstFile));
-        $secondObject = parserFile((string)($secondFileContent), (string)($extensionSecondFile));
+        $firstObject = parserFile($firstFileContent, $extensionFirstFile);
+        $secondObject = parserFile($secondFileContent, $extensionSecondFile);
         $astFormat = compareIter($firstObject, $secondObject);
     } catch (Exeption $e) {
         echo 'An exception thrown: ',  $e->getMessage(), PHP_EOL;
