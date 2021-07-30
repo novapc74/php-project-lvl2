@@ -2,7 +2,7 @@
 
 namespace Differ\Formatters\Plain;
 
-use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\TestCase\Exeption;
 
 function render(array $astFormat, string $node = null): string
 {
@@ -47,7 +47,7 @@ function render(array $astFormat, string $node = null): string
         case 'replace':
             return "Property '{$delimiter}{$key}' was updated. From {$oldValue} to {$newValue}";
         default:
-            throw new Exception("src\Differ\Formatters\Plain Unknown property");
+            throw new \Exception("src\Differ\Formatters\Plain Unknown property");
     }
 }
 
