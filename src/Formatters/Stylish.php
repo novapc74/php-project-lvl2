@@ -54,25 +54,28 @@ function displayStylish(array $tree, int $depth = 1): string
     $listForMap = array_keys($tree);
     $lines = array_map(function ($item) use ($tree, $currentIndent, $nextIndent, $depth): string {
         $key = $tree[$item]['key'];
+        $newTree = [];
         $value = displayStylish($tree[$item]['children'], $depth + 1);
         if ($tree[$item]['type'] === 'nested') {
             return "{$currentIndent}{$key}: {$value}";
         }
         if (is_object($tree[$item]['oldValue'])) {
             $oldValue = stringify(get_object_vars($tree[$item]['oldValue']), strlen($nextIndent) + 2);
-            $newTree['key'] = $tree[$item]['key'];
-            $newTree['type'] = $tree[$item]['type'];
-            $newTree['newValue'] = $tree[$item]['newValue'];
-            $newTree['oldValue'] = $oldValue;
-            return $nextIndent . implode(PHP_EOL . $nextIndent, explode('delmiter', render($newTree)));
+            $tree = ['key' => $tree[$item]['key'],
+                    'type' => $tree[$item]['type'],
+                    'newValue' => $tree[$item]['newValue'],
+                    'oldValue' => $oldValue
+                ];
+            return $nextIndent . implode(PHP_EOL . $nextIndent, explode('delmiter', render($tree)));
         }
         if (is_object($tree[$item]['newValue'])) {
             $newValue = stringify(get_object_vars($tree[$item]['newValue']), strlen($nextIndent) + 2);
-            $newTree['key'] = $tree[$item]['key'];
-            $newTree['type'] = $tree[$item]['type'];
-            $newTree['oldValue'] = $tree[$item]['oldValue'];
-            $newTree['newValue'] = $newValue;
-            return $nextIndent . implode(PHP_EOL . $nextIndent, explode('delmiter', render($newTree)));
+            $tree = ['key' => $tree[$item]['key'],
+                    'type' => $tree[$item]['type'],
+                    'newValue' => $newValue,
+                    'oldValue' => $tree[$item]['oldValue']
+                ];
+            return $nextIndent . implode(PHP_EOL . $nextIndent, explode('delmiter', render($tree)));
         }
         return $nextIndent . implode(PHP_EOL . $nextIndent, explode('delmiter', render($tree[$item])));
     }, $listForMap);

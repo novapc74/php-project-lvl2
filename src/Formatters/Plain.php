@@ -59,7 +59,11 @@ function displayPlain(array $tree, string $node = null): string
             return displayPlain($tree[$item]['children'], $node2);
         }
         if ($tree[$item]['type'] !== 'unchanged') {
-            isset($node) ? $delimiter = $node . '.' : $delimiter = '';
+            if ($node !== null) {
+                $delimiter = $node . '.';
+            } else {
+                $delimiter = '';
+            }
             return "Property '{$delimiter}" . render($tree[$item]);
         }
         return '';
