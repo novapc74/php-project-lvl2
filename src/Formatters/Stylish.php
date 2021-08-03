@@ -24,39 +24,34 @@ function stringify(array $value, int $spacesCount = 1): string
     return $iter($value, $depth = 1);
 }
 
-function render(array $astFormat, string $nextIndent): string
+function render(array $tree): string
 {
-    $key = $astFormat['key'];
-    $type = $astFormat['type'];
-    if (is_object($astFormat['oldValue'])) {
-        $oldValue = stringify(get_object_vars($astFormat['oldValue']), strlen($nextIndent) + 2);
-        if (is_null($astFormat['newValue'])) {
-            $newValue = 'null';
-        } else {
-            $newValue = trim(var_export($astFormat['newValue'], true), "'");
-        }
-    } elseif (is_object($astFormat['newValue'])) {
-        $newValue = stringify(get_object_vars($astFormat['newValue']), strlen($nextIndent) + 2);
-        if (is_null($astFormat['oldValue'])) {
-            $oldValue = 'null';
-        } else {
-            $oldValue = trim(var_export($astFormat['oldValue'], true), "'");
-        }
+    $key = $tree['key'];
+    $type = $tree['type'];
+
+    if (is_null($tree['newValue'])) {
+        $newValue = 'null';
     } else {
-        if (is_null($astFormat['newValue'])) {
-            $newValue = 'null';
-        } else {
-            $newValue = trim(var_export($astFormat['newValue'], true), "'");
-        }
-        if (is_null($astFormat['oldValue'])) {
-            $oldValue = 'null';
-        } else {
-            $oldValue = trim(var_export($astFormat['oldValue'], true), "'");
-        }
+        $newValue = trim(var_export($tree['newValue'], true), "'");
+    }
+    if (is_null($tree['oldValue'])) {
+        $oldValue = 'null';
+    } else {
+        $oldValue = trim(var_export($tree['oldValue'], true), "'");
+    }
+    if (is_null($tree['newValue'])) {
+        $newValue = 'null';
+    } else {
+        $newValue = trim(var_export($tree['newValue'], true), "'");
+    }
+    if (is_null($tree['oldValue'])) {
+        $oldValue = 'null';
+    } else {
+        $oldValue = trim(var_export($tree['oldValue'], true), "'");
     }
     switch ($type) {
         case 'replace':
-            return "- {$key}: {$oldValue}" . PHP_EOL . "{$nextIndent}+ {$key}: {$newValue}";
+            return "- {$key}: {$oldValue}" . "delmiter" . "+ {$key}: {$newValue}";
         case 'added':
             return "+ {$key}: {$newValue}";
         case 'removed':
@@ -67,22 +62,33 @@ function render(array $astFormat, string $nextIndent): string
             throw new \Exception("src\Differ\Formatters\Stylish Unknown property");
     }
 }
-function displayStylish(array $astFormat, int $depth = 1): string
+function displayStylish(array $tree, int $depth = 1): string
 {
     $indentSize = $depth * 4;
     $currentIndent = str_repeat(' ', $indentSize);
     $nextIndent = str_repeat(' ', $indentSize - 2);
     $bracketIndent = str_repeat(' ', $indentSize - 4);
 
-    $listForMap = array_keys($astFormat);
-    $lines = array_map(function ($item) use ($astFormat, $currentIndent, $nextIndent, $depth): string {
-        $key = $astFormat[$item]['key'];
-        $value = displayStylish($astFormat[$item]['children'], $depth + 1);
-        if ($astFormat[$item]['type'] === 'nested') {
+    $listForMap = array_keys($tree);
+    $lines = array_map(function ($item) use ($tree, $currentIndent, $nextIndent, $depth): string {
+        $key = $tree[$item]['key'];
+        $value = displayStylish($tree[$item]['children'], $depth + 1);
+        if ($tree[$item]['type'] === 'nested') {
             return "{$currentIndent}{$key}: {$value}";
-        } else {
-            return $nextIndent . render($astFormat[$item], $nextIndent);
         }
+        if (is_object($tree[$item]['oldValue'])) {
+            $oldValue = stringify(get_object_vars($tree[$item]['oldValue']), strlen($nextIndent) + 2);
+            $newTree = $tree[$item];
+            $newTree['oldValue'] = $oldValue;
+            return $nextIndent . implode(PHP_EOL . $nextIndent, explode('delmiter', render($newTree, $nextIndent)));
+        }
+        if (is_object($tree[$item]['newValue'])) {
+            $newValue = stringify(get_object_vars($tree[$item]['newValue']), strlen($nextIndent) + 2);
+            $newTree = $tree[$item];
+            $newTree['newValue'] = $newValue;
+            return $nextIndent . implode(PHP_EOL . $nextIndent, explode('delmiter', render($newTree, $nextIndent)));
+        }
+        return $nextIndent . implode(PHP_EOL . $nextIndent, explode('delmiter', render($tree[$item], $nextIndent)));
     }, $listForMap);
     return implode(PHP_EOL, ['{', ...$lines, "{$bracketIndent}}"]);
 }

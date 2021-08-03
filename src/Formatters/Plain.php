@@ -4,67 +4,68 @@ namespace Differ\Formatters\Plain;
 
 use PHPUnit\Framework\TestCase\Exeption;
 
-function render(array $astFormat, string $node = null): string
+function render(array $tree): string
 {
-    $key = $astFormat['key'];
-    $type = $astFormat['type'];
+    $key = $tree['key'];
+    $type = $tree['type'];
     if (isset($node)) {
         $delimiter = $node . '.';
     } else {
         $delimiter = '';
     }
-    if (is_object($astFormat['oldValue'])) {
+    if (is_object($tree['oldValue'])) {
         $oldValue = '[complex value]';
-        if (is_null($astFormat['newValue'])) {
+        if (is_null($tree['newValue'])) {
             $newValue = 'null';
         } else {
-            $newValue = trim(var_export($astFormat['newValue'], true), '"');
+            $newValue = trim(var_export($tree['newValue'], true), '"');
         }
-    } elseif (is_object($astFormat['newValue'])) {
+    } elseif (is_object($tree['newValue'])) {
         $newValue = '[complex value]';
-        if (is_null($astFormat['oldValue'])) {
+        if (is_null($tree['oldValue'])) {
             $oldValue = 'null';
         } else {
-            $oldValue = trim(var_export($astFormat['oldValue'], true), '"');
+            $oldValue = trim(var_export($tree['oldValue'], true), '"');
         }
     } else {
-        if (is_null($astFormat['oldValue'])) {
+        if (is_null($tree['oldValue'])) {
             $oldValue = 'null';
         } else {
-            $oldValue = trim(var_export($astFormat['oldValue'], true), '"');
+            $oldValue = trim(var_export($tree['oldValue'], true), '"');
         }
-        if (is_null($astFormat['newValue'])) {
+        if (is_null($tree['newValue'])) {
             $newValue = 'null';
         } else {
-            $newValue = trim(var_export($astFormat['newValue'], true), '"');
+            $newValue = trim(var_export($tree['newValue'], true), '"');
         }
     }
     switch ($type) {
         case 'removed':
-            return "Property '{$delimiter}{$key}' was removed";
+            return "{$key}' was removed";
         case 'added':
-            return "Property '{$delimiter}{$key}' was added with value: {$newValue}";
+            return "{$key}' was added with value: {$newValue}";
         case 'replace':
-            return "Property '{$delimiter}{$key}' was updated. From {$oldValue} to {$newValue}";
+            return "{$key}' was updated. From {$oldValue} to {$newValue}";
         default:
             throw new \Exception("src\Differ\Formatters\Plain Unknown property");
     }
 }
 
-function displayPlain(array $astFormat, string $node = null): string
+function displayPlain(array $tree, string $node = null): string
 {
-    $listForMap = array_keys($astFormat);
-    $lines = array_map(function ($item) use ($astFormat, $node): string {
-        if ($astFormat[$item]['type'] === 'nested' && !isset($node)) {
-            $node1 = $astFormat[$item]['key'];
-            return displayPlain($astFormat[$item]['children'], $node1);
+    $listForMap = array_keys($tree);
+    $lines = array_map(function ($item) use ($tree, $node): string {
+        if ($tree[$item]['type'] === 'nested' && !isset($node)) {
+            $node1 = $tree[$item]['key'];
+            return displayPlain($tree[$item]['children'], $node1);
         }
-        if ($astFormat[$item]['type'] === 'nested') {
-            $node2 = $node . '.' . $astFormat[$item]['key'];
-            return displayPlain($astFormat[$item]['children'], $node2);
+        if ($tree[$item]['type'] === 'nested') {
+            $node2 = $node . '.' . $tree[$item]['key'];
+            return displayPlain($tree[$item]['children'], $node2);
         }
-        if ($astFormat[$item]['type'] !== 'unchanged') {
-            return render($astFormat[$item], $node);
+        if ($tree[$item]['type'] !== 'unchanged') {
+            isset($node) ? $delimiter = $node . '.' : $delimiter = '';
+            return "Property '{$delimiter}" . render($tree[$item]);
         }
         return '';
     }, $listForMap);
