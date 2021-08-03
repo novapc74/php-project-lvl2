@@ -28,27 +28,9 @@ function render(array $tree): string
 {
     $key = $tree['key'];
     $type = $tree['type'];
+    $newValue = is_null($tree['newValue']) ? 'null' : trim(var_export($tree['newValue'], true), "'");
+    $oldValue = is_null($tree['oldValue']) ? 'null' : trim(var_export($tree['oldValue'], true), "'");
 
-    if (is_null($tree['newValue'])) {
-        $newValue = 'null';
-    } else {
-        $newValue = trim(var_export($tree['newValue'], true), "'");
-    }
-    if (is_null($tree['oldValue'])) {
-        $oldValue = 'null';
-    } else {
-        $oldValue = trim(var_export($tree['oldValue'], true), "'");
-    }
-    if (is_null($tree['newValue'])) {
-        $newValue = 'null';
-    } else {
-        $newValue = trim(var_export($tree['newValue'], true), "'");
-    }
-    if (is_null($tree['oldValue'])) {
-        $oldValue = 'null';
-    } else {
-        $oldValue = trim(var_export($tree['oldValue'], true), "'");
-    }
     switch ($type) {
         case 'replace':
             return "- {$key}: {$oldValue}" . "delmiter" . "+ {$key}: {$newValue}";
@@ -78,17 +60,21 @@ function displayStylish(array $tree, int $depth = 1): string
         }
         if (is_object($tree[$item]['oldValue'])) {
             $oldValue = stringify(get_object_vars($tree[$item]['oldValue']), strlen($nextIndent) + 2);
-            $newTree = $tree[$item];
+            $newTree['key'] = $tree[$item]['key'];
+            $newTree['type'] = $tree[$item]['type'];
+            $newTree['newValue'] = $tree[$item]['newValue'];
             $newTree['oldValue'] = $oldValue;
-            return $nextIndent . implode(PHP_EOL . $nextIndent, explode('delmiter', render($newTree, $nextIndent)));
+            return $nextIndent . implode(PHP_EOL . $nextIndent, explode('delmiter', render($newTree)));
         }
         if (is_object($tree[$item]['newValue'])) {
             $newValue = stringify(get_object_vars($tree[$item]['newValue']), strlen($nextIndent) + 2);
-            $newTree = $tree[$item];
+            $newTree['key'] = $tree[$item]['key'];
+            $newTree['type'] = $tree[$item]['type'];
+            $newTree['oldValue'] = $tree[$item]['oldValue'];
             $newTree['newValue'] = $newValue;
-            return $nextIndent . implode(PHP_EOL . $nextIndent, explode('delmiter', render($newTree, $nextIndent)));
+            return $nextIndent . implode(PHP_EOL . $nextIndent, explode('delmiter', render($newTree)));
         }
-        return $nextIndent . implode(PHP_EOL . $nextIndent, explode('delmiter', render($tree[$item], $nextIndent)));
+        return $nextIndent . implode(PHP_EOL . $nextIndent, explode('delmiter', render($tree[$item])));
     }, $listForMap);
     return implode(PHP_EOL, ['{', ...$lines, "{$bracketIndent}}"]);
 }

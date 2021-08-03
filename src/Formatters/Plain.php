@@ -8,11 +8,6 @@ function render(array $tree): string
 {
     $key = $tree['key'];
     $type = $tree['type'];
-    if (isset($node)) {
-        $delimiter = $node . '.';
-    } else {
-        $delimiter = '';
-    }
     if (is_object($tree['oldValue'])) {
         $oldValue = '[complex value]';
         if (is_null($tree['newValue'])) {
