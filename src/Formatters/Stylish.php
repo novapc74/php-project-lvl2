@@ -61,21 +61,23 @@ function displayStylish(array $tree, int $depth = 1): string
         }
         if (is_object($tree[$item]['oldValue'])) {
             $oldValue = stringify(get_object_vars($tree[$item]['oldValue']), strlen($nextIndent) + 2);
-            $tree = ['key' => $tree[$item]['key'],
-                    'type' => $tree[$item]['type'],
-                    'newValue' => $tree[$item]['newValue'],
-                    'oldValue' => $oldValue
-                ];
-            return $nextIndent . implode(PHP_EOL . $nextIndent, explode('delmiter', render($tree)));
+            $string = render([
+                'key' => $tree[$item]['key'],
+                'type' => $tree[$item]['type'],
+                'newValue' => $tree[$item]['newValue'],
+                'oldValue' => $oldValue
+            ]);
+            return $nextIndent . implode(PHP_EOL . $nextIndent, explode('delmiter', $string));
         }
         if (is_object($tree[$item]['newValue'])) {
             $newValue = stringify(get_object_vars($tree[$item]['newValue']), strlen($nextIndent) + 2);
-            $tree = ['key' => $tree[$item]['key'],
-                    'type' => $tree[$item]['type'],
-                    'newValue' => $newValue,
-                    'oldValue' => $tree[$item]['oldValue']
-                ];
-            return $nextIndent . implode(PHP_EOL . $nextIndent, explode('delmiter', render($tree)));
+            $string = render([
+                'key' => $tree[$item]['key'],
+                'type' => $tree[$item]['type'],
+                'newValue' => $newValue,
+                'oldValue' => $tree[$item]['oldValue']
+            ]);
+            return $nextIndent . implode(PHP_EOL . $nextIndent, explode('delmiter', $string));
         }
         return $nextIndent . implode(PHP_EOL . $nextIndent, explode('delmiter', render($tree[$item])));
     }, $listForMap);

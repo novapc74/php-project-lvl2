@@ -59,12 +59,10 @@ function displayPlain(array $tree, string $node = null): string
             return displayPlain($tree[$item]['children'], $node2);
         }
         if ($tree[$item]['type'] !== 'unchanged') {
-            if ($node !== null) {
-                $delimiter = $node . '.';
-            } else {
-                $delimiter = '';
+            if ($node === null) {
+                return "Property '" . render($tree[$item]);
             }
-            return "Property '{$delimiter}" . render($tree[$item]);
+            return "Property '{$node}." . render($tree[$item]);
         }
         return '';
     }, $listForMap);
