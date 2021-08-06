@@ -84,7 +84,7 @@ function iter(array $tree, int $depth = 1): string
     return implode(PHP_EOL, ['{', ...$lines, "{$bracketIndent}}"]);
 }
 
-function render($tree): string
+function render(array $tree): string
 {
     return iter($tree);
 }
