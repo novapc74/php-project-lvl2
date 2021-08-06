@@ -8,14 +8,18 @@ use function Differ\Differ\genDiff;
 
 class DifferTest extends TestCase
 {
-    private $firstJson;
-    private $secondJson;
-    private $firstYaml;
-    private $secondYaml;
-    private $resultStylish;
-    private $resultPlain;
-    private $resultJson;
+    public function testGenDiffDefault()
+    {
+        $this->firstJson = 'tests/fixtures/firstFile.json';
+        $this->secondJson = 'tests/fixtures/secondFile.json';
+        $this->firstYaml = 'tests/fixtures/firstFile.yaml';
+        $this->secondYaml = 'tests/fixtures/secondFile.yaml';
 
+        $this->resultStylish = trim(file_get_contents('tests/fixtures/resultStylishDiff'));
+
+        $this->assertEquals($this->resultStylish, genDiff($this->firstJson, $this->secondJson));
+        $this->assertEquals($this->resultStylish, genDiff($this->firstYaml, $this->secondYaml));
+    }
     public function testGenDiffStylish()
     {
         $this->firstJson = 'tests/fixtures/firstFile.json';
@@ -27,9 +31,6 @@ class DifferTest extends TestCase
 
         $this->assertEquals($this->resultStylish, genDiff($this->firstJson, $this->secondJson, 'stylish'));
         $this->assertEquals($this->resultStylish, genDiff($this->firstYaml, $this->secondYaml, 'stylish'));
-
-        $this->assertEquals($this->resultStylish, genDiff($this->firstJson, $this->secondJson));
-        $this->assertEquals($this->resultStylish, genDiff($this->firstYaml, $this->secondYaml));
     }
 
     public function testGenDiffPlain()

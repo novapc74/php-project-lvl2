@@ -2,7 +2,7 @@
 
 namespace Differ\Formatters\Stylish;
 
-function stringify(array $value, int $spacesCount = 1): string
+function stringifyObject(array $tree, int $spacesCount): string
 {
     $iter = function ($currentValue, $depth) use (&$iter, $spacesCount): string {
         if (!is_array($currentValue)) {
@@ -21,10 +21,10 @@ function stringify(array $value, int $spacesCount = 1): string
         }, array_keys($currentValue), $currentValue);
         return implode(PHP_EOL, ["{", ...$lines, "{$bracketIndent}}"]);
     };
-    return $iter($value, $depth = 1);
+    return $iter($tree, $depth = 1);
 }
 
-function render(array $tree): string
+function stringifyTree(array $tree): string
 {
     $key = $tree['key'];
     $type = $tree['type'];
@@ -44,7 +44,7 @@ function render(array $tree): string
             throw new \Exception("src\Differ\Formatters\Stylish Unknown property");
     }
 }
-function displayStylish(array $tree, int $depth = 1): string
+function iter(array $tree, int $depth = 1): string
 {
     $indentSize = $depth * 4;
     $currentIndent = str_repeat(' ', $indentSize);
@@ -55,13 +55,13 @@ function displayStylish(array $tree, int $depth = 1): string
     $lines = array_map(function ($item) use ($tree, $currentIndent, $nextIndent, $depth): string {
         $key = $tree[$item]['key'];
         $newTree = [];
-        $value = displayStylish($tree[$item]['children'], $depth + 1);
+        $value = iter($tree[$item]['children'], $depth + 1);
         if ($tree[$item]['type'] === 'nested') {
             return "{$currentIndent}{$key}: {$value}";
         }
         if (is_object($tree[$item]['oldValue'])) {
-            $oldValue = stringify(get_object_vars($tree[$item]['oldValue']), strlen($nextIndent) + 2);
-            $string = render([
+            $oldValue = stringifyObject(get_object_vars($tree[$item]['oldValue']), strlen($nextIndent) + 2);
+            $string = stringifyTree([
                 'key' => $tree[$item]['key'],
                 'type' => $tree[$item]['type'],
                 'newValue' => $tree[$item]['newValue'],
@@ -70,8 +70,8 @@ function displayStylish(array $tree, int $depth = 1): string
             return $nextIndent . implode(PHP_EOL . $nextIndent, explode('delmiter', $string));
         }
         if (is_object($tree[$item]['newValue'])) {
-            $newValue = stringify(get_object_vars($tree[$item]['newValue']), strlen($nextIndent) + 2);
-            $string = render([
+            $newValue = stringifyObject(get_object_vars($tree[$item]['newValue']), strlen($nextIndent) + 2);
+            $string = stringifyTree([
                 'key' => $tree[$item]['key'],
                 'type' => $tree[$item]['type'],
                 'newValue' => $newValue,
@@ -79,7 +79,12 @@ function displayStylish(array $tree, int $depth = 1): string
             ]);
             return $nextIndent . implode(PHP_EOL . $nextIndent, explode('delmiter', $string));
         }
-        return $nextIndent . implode(PHP_EOL . $nextIndent, explode('delmiter', render($tree[$item])));
+        return $nextIndent . implode(PHP_EOL . $nextIndent, explode('delmiter', stringifyTree($tree[$item])));
     }, $listForMap);
     return implode(PHP_EOL, ['{', ...$lines, "{$bracketIndent}}"]);
+}
+
+function render($tree): string
+{
+    return iter($tree);
 }

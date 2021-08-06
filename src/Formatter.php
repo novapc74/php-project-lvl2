@@ -2,17 +2,20 @@
 
 namespace Differ\Formatter;
 
-use function Differ\Formatters\Stylish\displayStylish;
-use function Differ\Formatters\Plain\displayPlain;
-use function Differ\Formatters\Json\displayJson;
+use function Differ\Formatters\Stylish\render as renderStylishFormat;
+use function Differ\Formatters\Plain\render as renderPlainFormat;
+use function Differ\Formatters\Json\render as renderJsonFormat;
 
-function chooseFormat(array $ast, string $style): string
+function chooseFormat(array $tree, string $style = 'stylish'): string
 {
-    if ($style == 'json') {
-        return displayJson($ast);
+    switch ($style) {
+        case 'json':
+            return renderJsonFormat($tree);
+        case 'plain':
+            return renderPlainFormat($tree);
+        case 'stylish':
+            return renderStylishFormat($tree);
+        default:
+            throw new \Exception("src\Differ\Formatter unknown format");
     }
-    if ($style == 'plain') {
-        return displayPlain($ast);
-    }
-    return displayStylish($ast);
 }

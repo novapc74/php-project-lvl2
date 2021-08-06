@@ -7,13 +7,13 @@ use function Differ\Formatter\chooseFormat;
 
 function compareIter(object $firstObject, object $secondObject): array
 {
-    $keysBeginObject = array_keys(get_object_vars($firstObject));
-    $keysEndObject = array_keys(get_object_vars($secondObject));
-    $listForMap = array_unique(array_merge($keysBeginObject, $keysEndObject));
+    $keysFirstObject = array_keys(get_object_vars($firstObject));
+    $keysSecondObject = array_keys(get_object_vars($secondObject));
+    $listForMap = array_unique(array_merge($keysFirstObject, $keysSecondObject));
     $collection = collect($listForMap);
     $sortKey = $collection->sort();
     $key = $sortKey->values()->all();
-    $ast = array_map(function (string $key) use ($firstObject, $secondObject): array {
+    $tree = array_map(function (string $key) use ($firstObject, $secondObject): array {
         $oldValue = $firstObject->$key ?? null;
         $newValue = $secondObject->$key ?? null;
         if (is_object($oldValue) && is_object($newValue)) {
@@ -36,7 +36,7 @@ function compareIter(object $firstObject, object $secondObject): array
             'children' => $children ?? []
         ];
     }, $key);
-    return $ast;
+    return $tree;
 }
 
 function genDiff(string $firstFilePath, string $secondFilePath, string $styleString = 'stylish'): string
@@ -47,6 +47,6 @@ function genDiff(string $firstFilePath, string $secondFilePath, string $styleStr
         $extensionSecondFile = pathinfo($secondFilePath, PATHINFO_EXTENSION);
         $firstObject = parserFile($firstFileContent, $extensionFirstFile);
         $secondObject = parserFile($secondFileContent, $extensionSecondFile);
-        $astFormat = compareIter($firstObject, $secondObject);
-        return chooseFormat($astFormat, $styleString);
+        $tree = compareIter($firstObject, $secondObject);
+        return chooseFormat($tree, $styleString);
 }
