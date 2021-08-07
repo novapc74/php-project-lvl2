@@ -8,10 +8,10 @@ use function Differ\Differ\genDiff;
 
 class DifferTest extends TestCase
 {
-    public static $firstJson = 'tests/fixtures/firstFile.json';
-    public static $secondJson = 'tests/fixtures/secondFile.json';
-    public static $firstYaml = 'tests/fixtures/firstFile.yaml';
-    public static $secondYaml = 'tests/fixtures/secondFile.yaml';
+    private static $firstJson = 'tests/fixtures/firstFile.json';
+    private static $secondJson = 'tests/fixtures/secondFile.json';
+    private static $firstYaml = 'tests/fixtures/firstFile.yaml';
+    private static $secondYaml = 'tests/fixtures/secondFile.yaml';
 
     public function testGenDiffDefault()
     {
