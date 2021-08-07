@@ -8,54 +8,35 @@ use function Differ\Differ\genDiff;
 
 class DifferTest extends TestCase
 {
+    public static $firstJson = 'tests/fixtures/firstFile.json';
+    public static $secondJson = 'tests/fixtures/secondFile.json';
+    public static $firstYaml = 'tests/fixtures/firstFile.yaml';
+    public static $secondYaml = 'tests/fixtures/secondFile.yaml';
+
     public function testGenDiffDefault()
     {
-        $this->firstJson = 'tests/fixtures/firstFile.json';
-        $this->secondJson = 'tests/fixtures/secondFile.json';
-        $this->firstYaml = 'tests/fixtures/firstFile.yaml';
-        $this->secondYaml = 'tests/fixtures/secondFile.yaml';
-
-        $this->resultStylish = trim(file_get_contents('tests/fixtures/resultStylishDiff'));
-
-        $this->assertEquals($this->resultStylish, genDiff($this->firstJson, $this->secondJson));
-        $this->assertEquals($this->resultStylish, genDiff($this->firstYaml, $this->secondYaml));
+        $expected = trim(file_get_contents('tests/fixtures/resultStylishDiff'));
+        $this->assertEquals($expected, genDiff(self::$firstJson, self::$secondJson));
+        $this->assertEquals($expected, genDiff(self::$firstYaml, self::$secondYaml));
     }
     public function testGenDiffStylish()
     {
-        $this->firstJson = 'tests/fixtures/firstFile.json';
-        $this->secondJson = 'tests/fixtures/secondFile.json';
-        $this->firstYaml = 'tests/fixtures/firstFile.yaml';
-        $this->secondYaml = 'tests/fixtures/secondFile.yaml';
-
-        $this->resultStylish = trim(file_get_contents('tests/fixtures/resultStylishDiff'));
-
-        $this->assertEquals($this->resultStylish, genDiff($this->firstJson, $this->secondJson, 'stylish'));
-        $this->assertEquals($this->resultStylish, genDiff($this->firstYaml, $this->secondYaml, 'stylish'));
+        $expected = trim(file_get_contents('tests/fixtures/resultStylishDiff'));
+        $this->assertEquals($expected, genDiff(self::$firstJson, self::$secondJson, 'stylish'));
+        $this->assertEquals($expected, genDiff(self::$firstYaml, self::$secondYaml, 'stylish'));
     }
 
     public function testGenDiffPlain()
     {
-        $this->firstJson = 'tests/fixtures/firstFile.json';
-        $this->secondJson = 'tests/fixtures/secondFile.json';
-        $this->firstYaml = 'tests/fixtures/firstFile.yaml';
-        $this->secondYaml = 'tests/fixtures/secondFile.yaml';
-
-        $this->resultPlain = trim(file_get_contents('tests/fixtures/resultPlainDiff'));
-
-        $this->assertEquals($this->resultPlain, genDiff($this->firstJson, $this->secondJson, 'plain'));
-        $this->assertEquals($this->resultPlain, genDiff($this->firstYaml, $this->secondYaml, 'plain'));
+        $expected = trim(file_get_contents('tests/fixtures/resultPlainDiff'));
+        $this->assertEquals($expected, genDiff(self::$firstJson, self::$secondJson, 'plain'));
+        $this->assertEquals($expected, genDiff(self::$firstYaml, self::$secondYaml, 'plain'));
     }
 
     public function testGenDiffJson()
     {
-        $this->firstJson = 'tests/fixtures/firstFile.json';
-        $this->secondJson = 'tests/fixtures/secondFile.json';
-        $this->firstYaml = 'tests/fixtures/firstFile.yaml';
-        $this->secondYaml = 'tests/fixtures/secondFile.yaml';
-
-        $this->resultJson = trim(file_get_contents('tests/fixtures/resultJsonDiff'));
-
-        $this->assertEquals($this->resultJson, genDiff($this->firstJson, $this->secondJson, 'json'));
-        $this->assertEquals($this->resultJson, genDiff($this->firstYaml, $this->secondYaml, 'json'));
+        $expected = trim(file_get_contents('tests/fixtures/resultJsonDiff'));
+        $this->assertEquals($expected, genDiff(self::$firstJson, self::$secondJson, 'json'));
+        $this->assertEquals($expected, genDiff(self::$firstYaml, self::$secondYaml, 'json'));
     }
 }
