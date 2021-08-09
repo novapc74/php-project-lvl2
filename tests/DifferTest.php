@@ -8,35 +8,41 @@ use function Differ\Differ\genDiff;
 
 class DifferTest extends TestCase
 {
-    private static $firstJson = 'tests/fixtures/firstFile.json';
-    private static $secondJson = 'tests/fixtures/secondFile.json';
-    private static $firstYaml = 'tests/fixtures/firstFile.yaml';
-    private static $secondYaml = 'tests/fixtures/secondFile.yaml';
-
-    public function testGenDiffDefault()
+    public function getFixtureFullPath($fixtureName): string
     {
-        $expected = trim(file_get_contents('tests/fixtures/resultStylishDiff'));
-        $this->assertEquals($expected, genDiff(self::$firstJson, self::$secondJson));
-        $this->assertEquals($expected, genDiff(self::$firstYaml, self::$secondYaml));
-    }
-    public function testGenDiffStylish()
-    {
-        $expected = trim(file_get_contents('tests/fixtures/resultStylishDiff'));
-        $this->assertEquals($expected, genDiff(self::$firstJson, self::$secondJson, 'stylish'));
-        $this->assertEquals($expected, genDiff(self::$firstYaml, self::$secondYaml, 'stylish'));
+        $parts = [__DIR__, 'fixtures', $fixtureName];
+        return realpath(implode('/', $parts));
     }
 
-    public function testGenDiffPlain()
+    public function fixturesProvider()
     {
-        $expected = trim(file_get_contents('tests/fixtures/resultPlainDiff'));
-        $this->assertEquals($expected, genDiff(self::$firstJson, self::$secondJson, 'plain'));
-        $this->assertEquals($expected, genDiff(self::$firstYaml, self::$secondYaml, 'plain'));
+        $firstPathJson = $this->getFixtureFullPath('firstFile.json');
+        $secondPathJson = $this->getFixtureFullPath('secondFile.json');
+
+        $firstPathYaml = $this->getFixtureFullPath('firstFile.yaml');
+        $secondPathYaml = $this->getFixtureFullPath('secondFile.yaml');
+
+        $expectedStylish = trim(file_get_contents($this->getFixtureFullPath('resultStylishDiff')));
+        $expectedPlain = trim(file_get_contents($this->getFixtureFullPath('resultPlainDiff')));
+        $expectedJson = trim(file_get_contents($this->getFixtureFullPath('resultJsonDiff')));
+
+        return [
+            [$firstPathJson, $secondPathJson, $expectedStylish],
+            [$firstPathJson, $secondPathJson, $expectedStylish, 'stylish'],
+            [$firstPathJson, $secondPathJson, $expectedPlain , 'plain'],
+            [$firstPathJson, $secondPathJson, $expectedJson, 'json'],
+            [$firstPathYaml, $secondPathYaml, $expectedStylish],
+            [$firstPathYaml, $secondPathYaml, $expectedStylish, 'stylish'],
+            [$firstPathYaml, $secondPathYaml, $expectedPlain, 'plain'],
+            [$firstPathYaml, $secondPathYaml, $expectedJson, 'json']
+        ];
     }
 
-    public function testGenDiffJson()
+    /**
+     * @dataProvider fixturesProvider
+     */
+    public function testGenDiff($firstPath, $secondPath, $expected, $style = 'stylish')
     {
-        $expected = trim(file_get_contents('tests/fixtures/resultJsonDiff'));
-        $this->assertEquals($expected, genDiff(self::$firstJson, self::$secondJson, 'json'));
-        $this->assertEquals($expected, genDiff(self::$firstYaml, self::$secondYaml, 'json'));
+        $this->assertEquals($expected, genDiff($firstPath, $secondPath, $style));
     }
 }

@@ -44,6 +44,7 @@ function stringifyTree(array $tree): string
             throw new \Exception("src\Differ\Formatters\Stylish Unknown property");
     }
 }
+
 function iter(array $tree, int $depth = 1): string
 {
     $indentSize = $depth * 4;
